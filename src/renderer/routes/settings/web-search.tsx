@@ -38,7 +38,7 @@ export function RouteComponent() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${extension.webSearch.queritApiKey}`,
           },
-          body: { query: 'Chatbox' },
+          body: { query: 'Quasar' },
         })
         setQueritAvailable(true)
       } catch (e) {
@@ -56,7 +56,7 @@ export function RouteComponent() {
       setCheckingBocha(true)
       setBochaAvailable(undefined)
       try {
-        await new BochaSearch(extension.webSearch.bochaApiKey).search('Chatbox')
+        await new BochaSearch(extension.webSearch.bochaApiKey).search('Quasar')
         setBochaAvailable(true)
       } catch (e) {
         setBochaAvailable(false)
@@ -80,7 +80,7 @@ export function RouteComponent() {
             Authorization: `Bearer ${extension.webSearch.tavilyApiKey}`,
           },
           body: {
-            query: 'Chatbox',
+            query: 'Quasar',
             search_depth: 'basic',
             include_domains: [],
             exclude_domains: [],

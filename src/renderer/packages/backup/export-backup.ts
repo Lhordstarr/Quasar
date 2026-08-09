@@ -377,7 +377,7 @@ export async function exportBackupArchive(options: BackupExportOptions): Promise
       formatVersion: BACKUP_FORMAT_VERSION,
       exportedAt: exportedAt.toISOString(),
       application: {
-        name: 'Chatbox',
+        name: 'Quasar',
         version: await options.application.version,
         platform: await options.application.platform,
       },

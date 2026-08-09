@@ -1,6 +1,6 @@
 {
-  "name": "xyz.chatboxapp.ce",
-  "productName": "xyz.chatboxapp.ce",
+  "name": "xyz.quasar.ce",
+  "productName": "Quasar",
   "version": "1.22.2",
   "description": "A desktop client for multiple cutting-edge AI models",
   "author": {

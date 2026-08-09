@@ -3,9 +3,9 @@
   <a href="README-CN.md">简体中文</a>
 </p>
 
-这里是 Chatbox 社区版的代码仓库，以 GPLv3 许可证开源。
+这里是 Quasar 社区版（Chatbox 的 fork）的代码仓库，以 GPLv3 许可证开源。
 
-[Chatbox 再次开源！](https://github.com/chatboxai/chatbox/issues/2266)
+[Quasar 再次开源！](https://github.com/chatboxai/chatbox/issues/2266)
 
 我们定期从专业版仓库同步代码到这个仓库，反之亦然。
 
@@ -76,12 +76,12 @@
 <h1 align="center">
 <img src='./statics/icon.png' width='30'>
 <span>
-    Chatbox
+    Quasar
     <span style="font-size:8px; font-weight: normal;">(Community Edition)</span>
 </span>
 </h1>
 <p align="center">
-    <em>Chatbox 是一个 AI 模型桌面客户端，支持 ChatGPT、Claude、Google Gemini、Ollama 等主流模型，适用于 Windows、Mac、Linux、Web、Android 和 iOS 全平台</em>
+    <em>Quasar 是一个 AI 模型桌面客户端，支持 ChatGPT、Claude、Google Gemini、Ollama 等主流模型，适用于 Windows、Mac、Linux、Web、Android 和 iOS 全平台</em>
 </p>
 
 <p align="center">

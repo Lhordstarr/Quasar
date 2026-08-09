@@ -111,7 +111,7 @@ export default class WebExporter implements Exporter {
       try {
         const handle = await pickerWindow.showSaveFilePicker({
           suggestedName: filename,
-          types: [{ description: 'Chatbox backup', accept: { [mimeType]: extension ? [extension] : [] } }],
+          types: [{ description: 'Quasar backup', accept: { [mimeType]: extension ? [extension] : [] } }],
         })
         writable = await handle.createWritable()
       } catch (error) {

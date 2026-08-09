@@ -304,7 +304,7 @@ function createTray() {
       accelerator: 'Command+Q',
     },
   ])
-  tray.setToolTip('Chatbox')
+  tray.setToolTip('Quasar')
   tray.setContextMenu(contextMenu)
   tray.on('double-click', showOrHideWindow)
   return tray

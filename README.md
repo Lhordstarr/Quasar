@@ -6,12 +6,12 @@
 <h1 align="center">
 <img src='./doc/statics/icon.png' width='30'>
 <span>
-    Chatbox
+    Quasar
     <span style="font-size:8px; font-weight: normal;">(Community Edition)</span>
 </span>
 </h1>
 <p align="center">
-    <em>Your Ultimate AI Copilot on the Desktop. <br />Chatbox is a desktop client for ChatGPT, Claude and other LLMs, available on Windows, Mac, Linux</em>
+    <em>Your Ultimate AI Copilot on the Desktop. <br />Quasar is a desktop client for ChatGPT, Claude and other LLMs, available on Windows, Mac, Linux</em>
 </p>
 
 <p align="center">
@@ -48,9 +48,9 @@
 
 ---
 
-This is the repository for the Chatbox Community Edition, open-sourced under the GPLv3 license.
+This is the repository for the Quasar Community Edition, a fork of Chatbox, open-sourced under the GPLv3 license.
 
-[Chatbox is going open-source Again!](https://github.com/chatboxai/chatbox/issues/2266)
+[Quasar is going open-source Again!](https://github.com/chatboxai/chatbox/issues/2266)
 
 We regularly sync code from the pro repo to this repo, and vice versa.
 
@@ -121,7 +121,7 @@ For more information: [chatboxai.app](https://chatboxai.app/)
 
 ### For End Users
 1. Download the appropriate installer for your platform from the [releases page](https://github.com/chatboxai/chatbox/releases)
-2. Install and launch Chatbox
+2. Install and launch Quasar
 3. Configure your AI provider (OpenAI, Claude, etc.) in settings
 4. Start chatting!
 
@@ -191,7 +191,7 @@ For more information: [chatboxai.app](https://chatboxai.app/)
 
 ### 🌐 Platform Availability
 -   **Cross-Platform Desktop**  
-    :computer: Chatbox is ready for Windows, Mac, and Linux users.
+    :computer: Quasar is ready for Windows, Mac, and Linux users.
 
 -   **Web Version**  
     :globe_with_meridians: Use the web application on any device with a browser, anywhere.
@@ -222,7 +222,7 @@ For more information: [chatboxai.app](https://chatboxai.app/)
 
 ## How to Contribute
 
-We welcome contributions from the community! Here's how you can help make Chatbox better:
+We welcome contributions from the community! Here's how you can help make Quasar better:
 
 ### 🐛 Reporting Issues
 - Use [GitHub Issues](https://github.com/chatboxai/chatbox/issues) to report bugs or request features
@@ -237,7 +237,7 @@ We welcome contributions from the community! Here's how you can help make Chatbo
 5. Submit a pull request with a clear description of the changes
 
 ### 🌍 Translations
-Help make Chatbox accessible to more people by contributing translations:
+Help make Quasar accessible to more people by contributing translations:
 - Translation files are located in the `src/locales` directory
 - Follow the existing translation format
 - Submit a PR with your translation improvements
@@ -249,7 +249,7 @@ Help make Chatbox accessible to more people by contributing translations:
 
 ### 🌟 Other Ways to Contribute
 - Star the repository to show your support
-- Share Chatbox with others
+- Share Quasar with others
 - Answer questions in [GitHub Discussions](https://github.com/chatboxai/chatbox/discussions)
 - Provide feedback and suggestions
 
