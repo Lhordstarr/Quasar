@@ -125,7 +125,7 @@ export function useImageModelGroups(): ImageModelGroup[] {
         .filter((model) => model.type === 'image')
         .map(manualImageModelToOption)
       groups.push({
-        label: 'Pollinations',
+        label: 'Pollinations AI (Free)',
         providerId: ModelProviderEnum.Pollinations,
         models: mergeImageModels(pollinationsImageModels, manualModels),
       })

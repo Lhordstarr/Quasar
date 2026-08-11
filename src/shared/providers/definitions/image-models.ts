@@ -22,7 +22,7 @@ export const POLLINATIONS_IMAGE_MODELS: ImageProviderModel[] = [
 
 // Image models via Together AI (API key required)
 export const TOGETHER_IMAGE_MODELS: ImageProviderModel[] = [
-  { modelId: 'black-forest-labs/FLUX.1-schnell-Free', nickname: 'FLUX.1 Schnell' },
+  { modelId: 'black-forest-labs/FLUX.1-schnell', nickname: 'FLUX.1' },
   { modelId: 'black-forest-labs/FLUX.1-dev', nickname: 'FLUX.1 Dev' },
   { modelId: 'stabilityai/stable-diffusion-xl-base-1.0', nickname: 'Stable Diffusion XL' },
 ]

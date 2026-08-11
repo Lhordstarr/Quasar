@@ -1,7 +1,7 @@
 import { ApiError } from '../../../models/errors'
 import { getAspectRatioSize, HTTPImageGenerationModel } from './http-image-model'
 
-const TOGETHER_API_BASE = 'https://api.together.xyz/v1'
+const TOGETHER_API_BASE = 'https://api.together.ai/v1'
 
 export default class Together extends HTTPImageGenerationModel {
   public name = 'Together AI'

@@ -12,6 +12,16 @@ const getImageMock = vi.fn()
 const setCurrentGeneratingIdMock = vi.fn()
 const setCurrentRecordIdMock = vi.fn()
 const trackEventMock = vi.fn()
+const toastAddMock = vi.fn()
+const getModelMock = vi.fn()
+
+vi.mock('./toastActions', () => ({
+  add: toastAddMock,
+}))
+
+vi.mock('@shared/providers', () => ({
+  getModel: getModelMock,
+}))
 
 vi.mock('@/adapters', () => ({
   createModelDependencies: vi.fn(async () => ({
@@ -55,6 +65,7 @@ vi.mock('./settingsStore', () => ({
   settingsStore: {
     getState: () => ({
       licenseKey: 'license-key',
+      getSettings: () => ({ providers: {} }),
     }),
   },
 }))
@@ -74,6 +85,7 @@ vi.mock('@/lib/utils', () => ({
 
 vi.mock('@/platform', () => ({
   default: {
+    getConfig: async () => ({}),
     getImageGenerationStorage: () => ({
       getById: getImageGenerationByIdMock,
     }),
@@ -277,6 +289,46 @@ describe('imageGenerationActions reference image payload', () => {
         })
       )
     })
+  })
+
+  it('shows a helpful toast when a direct provider hits a rate limit or quota error', async () => {
+    const paintMock = vi.fn().mockRejectedValue(new Error('429 Too Many Requests: Quota Exceeded'))
+    getModelMock.mockReturnValue({ paint: paintMock })
+
+    const { createAndGenerate } = await import('./imageGenerationActions')
+
+    await createAndGenerate({
+      prompt: 'make an image',
+      referenceImages: [],
+      model: {
+        provider: 'pollinations',
+        modelId: 'flux',
+      },
+      imageGenerateNum: 1,
+    })
+
+    await vi.waitFor(() => {
+      expect(updateRecordMock).toHaveBeenCalledWith(
+        'record-1',
+        expect.objectContaining({
+          status: 'error',
+          error: expect.stringContaining('429 Too Many Requests'),
+        })
+      )
+    })
+
+    expect(updateRecordMock).toHaveBeenCalledWith(
+      'record-1',
+      expect.objectContaining({
+        error: expect.stringContaining('switch to the free Pollinations provider'),
+      })
+    )
+    expect(toastAddMock).toHaveBeenCalledWith(
+      expect.stringContaining('rate limit or quota'),
+      6000,
+      expect.objectContaining({ label: 'Settings', settingsPath: '/provider' })
+    )
+    expect(trackEventMock).toHaveBeenCalledWith('generate_image', expect.objectContaining({ path: 'direct' }))
   })
 
   it('stores thumbnail URLs separately from original image URLs', async () => {

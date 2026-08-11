@@ -15,6 +15,7 @@ import platform from '@/platform'
 import storage from '@/storage'
 import { StorageKeyGenerator } from '@/storage/StoreStorage'
 import { trackEvent } from '@/utils/track'
+import * as toastActions from './toastActions'
 import {
   addGeneratedImage,
   createRecord,
@@ -420,6 +421,11 @@ async function generateImagesDirect(recordId: string, params: GenerateImageParam
     const errorRecordUpdate = getErrorRecordUpdate(err)
     if (isRateLimitOrQuotaError(err) && errorRecordUpdate.error) {
       errorRecordUpdate.error = withRateLimitHint(errorRecordUpdate.error)
+      toastActions.add(
+        'Image generation hit a rate limit or quota. Switch to the free Pollinations AI provider or try a different API key.',
+        6000,
+        { label: 'Settings', settingsPath: '/provider' }
+      )
     }
 
     const updatedRecord = await updateRecord(recordId, errorRecordUpdate)

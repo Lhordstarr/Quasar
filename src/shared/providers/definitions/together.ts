@@ -10,7 +10,7 @@ export const togetherProvider = defineProvider({
   description: 'Image generation via the Together AI API.',
   urls: {
     website: 'https://www.together.ai/',
-    apiKey: 'https://api.together.xyz/settings/api-keys',
+    apiKey: 'https://api.together.ai/settings/api-keys',
     docs: 'https://docs.together.ai/docs/images-overview',
   },
   defaultSettings: {
