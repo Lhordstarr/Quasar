@@ -1,11 +1,19 @@
 import { createTheme, type ThemeOptions } from '@mui/material/styles'
 import { getDefaultInterfaceColors, resolveInterfaceBrandColor } from '@shared/theme-colors'
 import { useLayoutEffect, useMemo } from 'react'
+import { useColorIntegrationPalette } from '@/stores/colorIntegrationStore'
 import { settingsStore, useLanguage, useSettingsStore } from '@/stores/settingsStore'
 import { uiStore, useUIStore } from '@/stores/uiStore'
 import { type Language, Theme } from '../../shared/types'
 import platform from '../platform'
 import DesktopPlatform from '../platform/desktop_platform'
+
+const ACCENT_CSS_VARIABLES = [
+  '--chatbox-accent',
+  '--chatbox-accent-gradient-start',
+  '--chatbox-accent-gradient-end',
+  '--chatbox-accent-gradient',
+] as const
 
 export const switchTheme = async (theme: Theme) => {
   let finalTheme = 'light' as 'light' | 'dark'
@@ -28,6 +36,7 @@ export default function useAppTheme() {
   const interfaceColors = useSettingsStore((state) => state.interfaceColors ?? getDefaultInterfaceColors())
   const realTheme = useUIStore((state) => state.realTheme)
   const language = useLanguage()
+  const colorIntegrationPalette = useColorIntegrationPalette()
 
   useLayoutEffect(() => {
     switchTheme(theme)
@@ -52,21 +61,37 @@ export default function useAppTheme() {
   }, [realTheme])
 
   useLayoutEffect(() => {
+    // Base light/dark surfaces always come from the active interface theme.
+    // The dynamic palette (pywal etc.) only overrides the accent/gradient.
     const colors = interfaceColors[realTheme]
-    const brandColor = resolveInterfaceBrandColor(colors.brand, realTheme)
+    const baseBrandColor = resolveInterfaceBrandColor(colors.brand, realTheme)
+    const brandColor = colorIntegrationPalette?.accent ?? baseBrandColor
     const rootStyle = document.documentElement.style
     rootStyle.setProperty('--chatbox-background-primary', colors.backgroundPrimary)
     rootStyle.setProperty('--chatbox-background-secondary', colors.backgroundSecondary)
     rootStyle.setProperty('--chatbox-background-tertiary', colors.backgroundTertiary)
     rootStyle.setProperty('--chatbox-brand', brandColor)
-  }, [interfaceColors, realTheme])
 
+    if (colorIntegrationPalette) {
+      const [gradientStart, gradientEnd] = colorIntegrationPalette.accentGradient
+      rootStyle.setProperty('--chatbox-accent', colorIntegrationPalette.accent)
+      rootStyle.setProperty('--chatbox-accent-gradient-start', gradientStart)
+      rootStyle.setProperty('--chatbox-accent-gradient-end', gradientEnd)
+      rootStyle.setProperty('--chatbox-accent-gradient', `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`)
+    } else {
+      for (const variable of ACCENT_CSS_VARIABLES) {
+        rootStyle.removeProperty(variable)
+      }
+    }
+  }, [interfaceColors, realTheme, colorIntegrationPalette])
+
+  const effectiveBrandColor = colorIntegrationPalette?.accent ?? interfaceColors[realTheme].brand
   const themeObj = useMemo(
     () =>
       createTheme(
-        getThemeDesign(realTheme, language, resolveInterfaceBrandColor(interfaceColors[realTheme].brand, realTheme))
+        getThemeDesign(realTheme, language, resolveInterfaceBrandColor(effectiveBrandColor, realTheme))
       ),
-    [interfaceColors, language, realTheme]
+    [interfaceColors, language, realTheme, effectiveBrandColor]
   )
   return themeObj
 }

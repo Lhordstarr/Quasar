@@ -504,6 +504,10 @@ export const SettingsSchema = GlobalSessionSettingsSchema.extend({
   theme: z.nativeEnum(Theme),
   interfaceColors: InterfaceColorsSchema,
   interfaceColorPresets: z.array(InterfaceColorPresetSchema).default([]),
+  // Absolute path to a dynamic palette file (e.g. ~/.cache/wal/colors.json, a
+  // .css file, or an .html file). When set on desktop, the file is watched and
+  // its accent/gradient tokens are overlaid on top of the active base theme.
+  colorIntegrationPath: z.string().optional().catch(undefined),
   language: z.enum([
     'en',
     'zh-Hans',

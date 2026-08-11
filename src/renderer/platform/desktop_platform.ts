@@ -494,6 +494,25 @@ export default class DesktopPlatform implements Platform {
     return this.ipc.invoke('dialog:openDirectory')
   }
 
+  public async openFileDialog() {
+    return this.ipc.invoke('dialog:openFile')
+  }
+
+  public watchColorIntegrationFile(filePath: string) {
+    return this.ipc.invoke('color-integration:watch', filePath)
+  }
+
+  public stopColorIntegrationFile() {
+    return this.ipc.invoke('color-integration:unwatch')
+  }
+
+  public onColorIntegrationUpdate(
+    callback: (payload: { filePath: string; content?: string; error?: string }) => void
+  ): () => void {
+    const unsubscribe = this.ipc.onColorIntegrationUpdate(callback)
+    return unsubscribe
+  }
+
   public minimize() {
     return this.ipc.invoke('window:minimize')
   }

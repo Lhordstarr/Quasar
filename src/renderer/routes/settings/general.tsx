@@ -30,7 +30,7 @@ import {
 import { type Language, Theme } from '@shared/types'
 import { formatFileSize } from '@shared/utils'
 import { getBackupFilename } from '@shared/utils/backup'
-import { IconCheck, IconDeviceFloppy, IconInfoCircle, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
+import { IconCheck, IconDeviceFloppy, IconFolderOpen, IconInfoCircle, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
 import { createFileRoute } from '@tanstack/react-router'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -53,6 +53,7 @@ import platform from '@/platform'
 import { canShareFile, shareFile } from '@/platform/web_file_share'
 import storage from '@/storage'
 import { getMetaStorage, recoverSessionList } from '@/stores/chatStore'
+import { useColorIntegrationStore } from '@/stores/colorIntegrationStore'
 import { migrateOnData } from '@/stores/migration'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useUIStore } from '@/stores/uiStore'
@@ -374,6 +375,50 @@ export function RouteComponent() {
                 </Button>
               </SimpleGrid>
             </Stack>
+          )}
+        </Stack>
+
+        {/* Color Integration */}
+        <Stack gap="xs">
+          <Title order={5}>{t('Color Integration')}</Title>
+          <Text size="sm" c="chatbox-tertiary">
+            {t(
+              'Point to a dynamic palette file (e.g. ~/.cache/wal/colors.json) and its accent colors will be applied live on top of your theme as an accent gradient overlay.'
+            )}
+          </Text>
+          {platform.type === 'desktop' ? (
+            <>
+              <Flex align="center" gap="sm">
+                <TextInput
+                  style={{ flex: 1 }}
+                  maw={520}
+                  placeholder="~/.cache/wal/colors.json"
+                  value={settings.colorIntegrationPath}
+                  onChange={(event) =>
+                    setSettings({
+                      colorIntegrationPath: event.currentTarget.value,
+                    })
+                  }
+                />
+                <Button
+                  variant="light"
+                  leftSection={<IconFolderOpen size={16} />}
+                  onClick={async () => {
+                    const result = await platform.openFileDialog?.()
+                    if (result && !result.canceled && result.path) {
+                      setSettings({ colorIntegrationPath: result.path })
+                    }
+                  }}
+                >
+                  {t('Browse')}
+                </Button>
+              </Flex>
+              <ColorIntegrationStatusText />
+            </>
+          ) : (
+            <Text size="sm" c="chatbox-tertiary">
+              {t('Color integration is only available in the desktop app.')}
+            </Text>
           )}
         </Stack>
 
@@ -1036,4 +1081,26 @@ const ExportLogsSection = () => {
       )}
     </Stack>
   )
+}
+
+const ColorIntegrationStatusText = () => {
+  const { t } = useTranslation()
+  const status = useColorIntegrationStore((state) => state.status)
+  const error = useColorIntegrationStore((state) => state.error)
+
+  if (status === 'watching') {
+    return (
+      <Text size="sm" c="chatbox-success">
+        {t('Watching palette file — theme updates automatically on change.')}
+      </Text>
+    )
+  }
+  if (status === 'error' && error) {
+    return (
+      <Text size="sm" c="chatbox-error">
+        {error}
+      </Text>
+    )
+  }
+  return null
 }

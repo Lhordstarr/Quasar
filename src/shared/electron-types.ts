@@ -2,6 +2,9 @@ export interface ElectronIPC {
   invoke: (channel: string, ...args: any[]) => Promise<any>
   getPathForFile: (file: File) => string
   onSystemThemeChange: (callback: () => void) => () => void
+  onColorIntegrationUpdate: (
+    callback: (payload: { filePath: string; content?: string; error?: string }) => void
+  ) => () => void
   onWindowMaximizedChanged: (callback: (_: Electron.IpcRendererEvent, windowMaximized: boolean) => void) => () => void
   onWindowShow: (callback: () => void) => () => void
   onWindowFocused: (callback: () => void) => () => void

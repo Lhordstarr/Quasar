@@ -32,6 +32,7 @@ import { flushSentry, sentry } from './adapters/sentry'
 import * as analystic from './analystic-node'
 import { AppUpdater } from './app-updater'
 import * as autoLauncher from './autoLauncher'
+import { registerColorIntegrationIpc } from './color-integration'
 import { handleDeepLink } from './deeplinks'
 import { parseFile } from './file-parser'
 import { isQuitForInstallRequested } from './installer-command'
@@ -1030,6 +1031,21 @@ ipcMain.handle('dialog:openDirectory', async () => {
   return { canceled: false, path: result.filePaths[0] }
 })
 
+ipcMain.handle('dialog:openFile', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    title: 'Select Color Palette File',
+    filters: [
+      { name: 'Palette files', extensions: ['json', 'css', 'html', 'txt'] },
+      { name: 'All files', extensions: ['*'] },
+    ],
+  })
+  if (result.canceled || result.filePaths.length === 0) {
+    return { canceled: true }
+  }
+  return { canceled: false, path: result.filePaths[0] }
+})
+
 ipcMain.handle('window:minimize', () => {
   mainWindow?.minimize()
 })
@@ -1053,3 +1069,4 @@ ipcMain.handle('window:is-maximized', () => {
 registerSandboxHandlers()
 registerSkillsHandlers()
 registerOAuthHandlers()
+registerColorIntegrationIpc()

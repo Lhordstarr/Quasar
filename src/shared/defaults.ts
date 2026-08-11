@@ -84,6 +84,7 @@ export function settings(): Settings {
     theme: Theme.System,
     interfaceColors: getDefaultInterfaceColors(),
     interfaceColorPresets: [],
+    colorIntegrationPath: '',
     language: 'en',
     fontSize: 14,
     spellCheck: true,

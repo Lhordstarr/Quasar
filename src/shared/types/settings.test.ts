@@ -81,6 +81,30 @@ describe('SettingsSchema shortcut compatibility', () => {
   })
 })
 
+describe('SettingsSchema color integration path', () => {
+  test('parses and persists a color integration file path', () => {
+    const parsed = SettingsSchema.parse({
+      ...defaultSettings(),
+      colorIntegrationPath: '/home/user/.cache/wal/colors.json',
+    })
+
+    expect(parsed.colorIntegrationPath).toBe('/home/user/.cache/wal/colors.json')
+  })
+
+  test('defaults to an empty string', () => {
+    const parsed = SettingsSchema.parse(defaultSettings())
+
+    expect(parsed.colorIntegrationPath).toBe('')
+  })
+
+  test('tolerates missing colorIntegrationPath from older settings', () => {
+    const legacySettings: Record<string, unknown> = { ...defaultSettings() }
+    delete legacySettings.colorIntegrationPath
+
+    expect(SettingsSchema.parse(legacySettings).colorIntegrationPath).toBeUndefined()
+  })
+})
+
 describe('SettingsSchema VibeDrop publication history', () => {
   test('parses session publication metadata without a schema migration', () => {
     const parsed = SettingsSchema.parse({

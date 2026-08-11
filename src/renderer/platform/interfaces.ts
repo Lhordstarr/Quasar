@@ -222,6 +222,17 @@ export interface Platform extends Storage {
   // Directory dialog (Desktop only)
   openDirectoryDialog?(): Promise<{ canceled: boolean; path?: string }>
 
+  // File dialog (Desktop only)
+  openFileDialog?(): Promise<{ canceled: boolean; path?: string }>
+
+  // Color Integration (Desktop only): watch a dynamic palette file on disk and
+  // stream its content back whenever it changes so the theme can update live.
+  watchColorIntegrationFile?(filePath: string): Promise<{ ok: boolean; error?: string }>
+  stopColorIntegrationFile?(): Promise<void>
+  onColorIntegrationUpdate?(
+    callback: (payload: { filePath: string; content?: string; error?: string }) => void
+  ): () => void
+
   // window controls
   minimize(): Promise<void>
 

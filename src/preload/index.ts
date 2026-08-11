@@ -20,6 +20,9 @@ const electronHandler: ElectronIPC = {
     ipcRenderer.on('system-theme-updated', callback)
     return () => ipcRenderer.off('system-theme-updated', callback)
   },
+  onColorIntegrationUpdate: createListener<[{ filePath: string; content?: string; error?: string }]>(
+    'color-integration:updated'
+  ),
   onWindowMaximizedChanged: (callback: (_: Electron.IpcRendererEvent, windowMaximized: boolean) => void) => {
     ipcRenderer.on('window:maximized-changed', callback)
     return () => ipcRenderer.off('window:maximized-changed', callback)
