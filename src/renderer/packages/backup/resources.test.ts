@@ -1,9 +1,8 @@
-import type { CopilotDetail, Session, SessionMetaRecord, Settings } from '@shared/types'
+import type { Session, SessionMetaRecord, Settings } from '@shared/types'
 import { describe, expect, it } from 'vitest'
 import {
   collectSessionResourceReferences,
   prepareSessionForBackup,
-  restoreCopilotResourceKeys,
   restoreSessionMetaResourceKeys,
   restoreSessionResourceKeys,
   restoreSettingsResourceKeys,
@@ -192,7 +191,7 @@ describe('backup resource graph', () => {
     expect(cleanedMessage.pictures).toEqual([{ url: 'https://example.com/fallback.png' }])
   })
 
-  it('removes missing resource keys from metadata, settings, and copilots', () => {
+  it('removes missing resource keys from metadata and settings', () => {
     const resourceKeyMap = new Map([['picture:kept', 'picture:kept']])
     const meta: SessionMetaRecord = {
       id: 'session-1',
@@ -207,29 +206,11 @@ describe('backup resource graph', () => {
       defaultAssistantAvatarKey: 'picture:kept',
       backgroundImageKey: 'picture:background',
     }
-    const copilots: CopilotDetail[] = [
-      {
-        id: 'copilot-1',
-        name: 'Copilot',
-        prompt: 'Help',
-        avatar: { type: 'storage-key', storageKey: 'picture:avatar' },
-        backgroundImage: { type: 'url', url: 'https://example.com/background.png' },
-        screenshots: [
-          { type: 'storage-key', storageKey: 'picture:background' },
-          { type: 'url', url: 'https://example.com/screenshot.png' },
-        ],
-      },
-    ]
 
     expect(restoreSessionMetaResourceKeys(meta, resourceKeyMap)).not.toHaveProperty('assistantAvatarKey')
     expect(restoreSessionMetaResourceKeys(meta, resourceKeyMap)).not.toHaveProperty('backgroundImage')
     expect(restoreSettingsResourceKeys(settings, resourceKeyMap)).toEqual({
       defaultAssistantAvatarKey: 'picture:kept',
-    })
-    expect(restoreCopilotResourceKeys(copilots, resourceKeyMap)[0]).toMatchObject({
-      avatar: undefined,
-      backgroundImage: { type: 'url' },
-      screenshots: [{ type: 'url', url: 'https://example.com/screenshot.png' }],
     })
   })
 

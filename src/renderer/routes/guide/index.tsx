@@ -66,13 +66,12 @@ function GuidePage() {
     sendMessage,
     stopGeneration,
     selectUserType,
-    markGuideCompleted,
     onClaimStart,
     onClaimDetected,
     handleConfigComplete,
     clearSession,
     debugResetGuide,
-    debugSkipToLoginSuccess,
+    debugSkipToCompletion,
     debugTriggerRoundLimit,
     canSendMessage,
     hasValidConfig,
@@ -280,9 +279,9 @@ function GuidePage() {
                 <Menu.Label>Debug Actions</Menu.Label>
                 <Menu.Item
                   leftSection={<ScalableIcon icon={IconUserCheck} size={14} />}
-                  onClick={debugSkipToLoginSuccess}
+                  onClick={debugSkipToCompletion}
                 >
-                  Skip to Login Success
+                  Skip to Completion
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<ScalableIcon icon={IconPlayerSkipForward} size={14} />}
@@ -311,7 +310,6 @@ function GuidePage() {
               key={message.id}
               message={message}
               onSelectUserType={selectUserType}
-              onLoginSuccess={markGuideCompleted}
               onQuestionClick={sendMessage}
               onClaimStart={onClaimStart}
               onClaimDetected={onClaimDetected}

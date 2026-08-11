@@ -20,7 +20,6 @@ import {
   type ChatboxAILicenseDetail,
   type ChatboxAIPlanType,
   type Config,
-  type CopilotDetail,
   type ModelProvider,
   ProviderModelInfoSchema,
   type RemoteConfig,
@@ -170,60 +169,6 @@ export async function checkNeedUpdate(version: string, os: string, config: Confi
 //     })
 //     return res['data'] || []
 // }
-
-export async function listCopilotTags(lang: string) {
-  type Response = {
-    data: string[]
-  }
-  const res = await ofetch<Response>(`${getAPIOrigin()}/api/system_copilots/tags/${lang}`, {
-    method: 'GET',
-    retry: 3,
-  })
-  return res.data
-}
-
-export async function listCopilotsByCursor(
-  lang: string,
-  filters?: {
-    limit?: number
-    cursor?: string
-    tag?: string
-    search?: string
-  }
-) {
-  type Response = {
-    data: CopilotDetail[]
-    next_cursor: string | null
-  }
-  const res = await ofetch<Response>(`${getAPIOrigin()}/api/system_copilots/list`, {
-    method: 'POST',
-    retry: 3,
-    body: { lang, ...filters },
-  })
-  return res
-}
-
-export async function recordCopilotUsage(params: {
-  id: string
-  action: 'create_session' | 'create_thread' | 'create_message' | 'use_copilot'
-}) {
-  await ofetch(`${getAPIOrigin()}/api/system_copilots/record_usage`, {
-    method: 'POST',
-    body: {
-      ...params,
-      device_id: (await platform.getConfig()).uuid,
-    },
-  })
-}
-
-export async function recordCopilotShare(detail: CopilotDetail) {
-  await ofetch(`${getAPIOrigin()}/api/copilots/share-record`, {
-    method: 'POST',
-    body: {
-      detail: detail,
-    },
-  })
-}
 
 export async function getPremiumPrice() {
   type Response = {
@@ -533,24 +478,6 @@ export async function parseUserLinkFree(params: { url: string }) {
   })
   const json: Response = await res.json()
   return json
-}
-
-/**
- * Request seam for the Chatbox `build-in` web search provider. Mirrors
- * `getLicenseRequestOptions`: injects an afetch `fetchFn` (Chatbox error parsing + retry),
- * the API origin, and the Chatbox platform headers into the shared `searchNativeWeb` call.
- */
-export async function getChatboxWebSearchRequestOptions(): Promise<{
-  chatboxApiOrigin: string
-  fetchFn: typeof fetch
-  headers: Record<string, string>
-}> {
-  const afetch = await getAfetch()
-  return {
-    chatboxApiOrigin: getAPIOrigin(),
-    fetchFn: (input, init) => afetch(input, init, { parseChatboxRemoteError: true, retry: 2 }),
-    headers: await getChatboxHeaders(),
-  }
 }
 
 async function getLicenseRequestOptions(): Promise<NativeLicenseRequestOptions> {

@@ -1,6 +1,5 @@
 export const BackupStorageKey = {
   Settings: 'settings',
-  MyCopilots: 'myCopilots',
   ConfigVersion: 'configVersion',
   ChatSessionsList: 'chat-sessions-list',
   ChatSessionSettings: 'chat-session-settings',

@@ -1,7 +1,7 @@
 import type { AppActionApprovalDetails } from '@shared/types'
 
 /**
- * Approval pause for Chatbox-owned state changes and potentially billable actions.
+ * Approval pause for Quasar-owned state changes and potentially billable actions.
  * Agent Full Access does not bypass this boundary.
  */
 export class AppActionApprovalPausedError extends Error {
@@ -14,7 +14,7 @@ export class AppActionApprovalPausedError extends Error {
     readonly preview: string,
     readonly details?: AppActionApprovalDetails
   ) {
-    super(`User approval required before running Chatbox action: ${action}`)
+    super(`User approval required before running Quasar action: ${action}`)
     this.name = 'AppActionApprovalPausedError'
   }
 }

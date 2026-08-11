@@ -5,7 +5,7 @@ export function isValidSkillName(value: string): boolean {
 }
 
 /**
- * Normalize a Claude Code skill name to Chatbox's kebab-case format.
+ * Normalize a Claude Code skill name to Quasar's kebab-case format.
  * Prefers the directory name (already kebab-case in most Claude skills),
  * falls back to normalizing the frontmatter name.
  */

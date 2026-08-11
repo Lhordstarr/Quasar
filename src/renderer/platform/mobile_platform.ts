@@ -56,7 +56,7 @@ export default class MobilePlatform extends MobileSQLiteStorage implements Platf
 
       // 处理 auth 回调链接: chatbox://auth/callback?ticket_id=xxx&status=success
       if (parsedUrl.hostname === 'auth' && parsedUrl.pathname === '/callback') {
-        // 不需要，实际跳回到 app 后业务hooks useLogin 会处理后续动作
+        // 已废弃：邮箱验证码登录已移除
       }
 
       console.warn('Unhandled deep link:', url)

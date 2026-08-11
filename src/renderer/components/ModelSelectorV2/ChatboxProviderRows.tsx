@@ -1,22 +1,11 @@
-import { Button, Flex, Text } from '@mantine/core'
+import { Flex, Text } from '@mantine/core'
 import type { ProviderModelInfo } from '@shared/types'
 import { ModelProviderEnum } from '@shared/types'
-import { IconChevronDown } from '@tabler/icons-react'
 import clsx from 'clsx'
-import type { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { trackUpgradeModelClick } from '@/analytics/model-selection'
 import type { ChatboxAIModelList } from '@/packages/remote'
-import platform from '@/platform'
-import { ScalableIcon } from '../common/ScalableIcon'
-import {
-  type ChatboxAIGroupView,
-  getChatboxAIModelName,
-  isChatboxAIAdvancedGroup,
-  isChatboxAIModelLocked,
-  modelMatchesSearch,
-} from './chatboxCatalog'
-import { FALLBACK_UPGRADE_URL, MOBILE_TAP_RESET_STYLE, MODEL_SELECTOR_SURFACE_CLASS } from './constants'
+import { type ChatboxAIGroupView, getChatboxAIModelName, modelMatchesSearch } from './chatboxCatalog'
+import { MOBILE_TAP_RESET_STYLE, MODEL_SELECTOR_SURFACE_CLASS } from './constants'
 import { getGroupLabel, toProviderModelInfo } from './helpers'
 import { ModelRow } from './ModelRow'
 import { ProviderRowHeader } from './ProviderRowHeader'
@@ -35,8 +24,6 @@ export function ChatboxProviderRows({
   search,
   groups,
   collapsed,
-  collapsedGroupIds,
-  advancedExpanded,
   selectedProviderId,
   selectedModelId,
   isMobile,
@@ -45,14 +32,12 @@ export function ChatboxProviderRows({
   isFavorited,
   onToggleProvider,
   onToggleGroup,
-  onSetAdvancedExpanded,
   onSelect,
   onToggleFavorite,
   onShowMobileDetail,
   onDesktopDetailOpen,
   onDesktopDetailClose,
   onDisabledSelect,
-  pageName,
 }: {
   catalog: ChatboxAIModelList
   provider: { id: string; name: string }
@@ -61,8 +46,6 @@ export function ChatboxProviderRows({
   search: string
   groups: ChatboxAIGroupView[]
   collapsed: boolean
-  collapsedGroupIds: Set<string>
-  advancedExpanded: boolean
   selectedProviderId?: string
   selectedModelId?: string
   isMobile: boolean
@@ -71,25 +54,17 @@ export function ChatboxProviderRows({
   isFavorited: (providerId: string, modelId: string) => boolean
   onToggleProvider: () => void
   onToggleGroup: (groupId: string) => void
-  onSetAdvancedExpanded: Dispatch<SetStateAction<boolean>>
   onSelect: (providerId: string, modelId: string) => void
   onToggleFavorite: (providerId: string, modelId: string) => void
   onShowMobileDetail: (detail: DetailModel) => void
-  onDesktopDetailOpen: (
-    key: string,
-    detail: DetailModel,
-    pricingLink: string | undefined,
-    anchor: HTMLElement,
-    upgradeLink?: string
-  ) => void
+  onDesktopDetailOpen: (key: string, detail: DetailModel, pricingLink: string | undefined, anchor: HTMLElement) => void
   onDesktopDetailClose: () => void
   onDisabledSelect: (modelId: string) => void
-  pageName?: string
 }) {
   const { t } = useTranslation()
   const selectedProviderMatches =
     selectedProviderId === provider.id ||
-    (provider.name === 'Chatbox AI' && selectedProviderId === ModelProviderEnum.ChatboxAI)
+    (provider.name === 'Quasar' && selectedProviderId === ModelProviderEnum.ChatboxAI)
   const favoriteSet = new Set(
     (favorites || []).filter((favorite) => favorite.provider === provider.id).map((favorite) => favorite.model)
   )
@@ -113,9 +88,6 @@ export function ChatboxProviderRows({
           return modelMatchesSearch(model, search, provider.name)
         }),
         total: group.modelIds.length,
-        isAdvanced: isChatboxAIAdvancedGroup(group.id),
-        isLocked: isChatboxAIModelLocked(group.id, catalog.license.plan),
-        isFeaturedOnly: false,
       }))
     : groups
   const rows = renderGroups.map((group) => {
@@ -124,12 +96,9 @@ export function ChatboxProviderRows({
         const model = catalog.models[modelId]
         if (!model) return null
         const providerModel = toProviderModelInfo(model)
-        const locked = group.isLocked
-        const disabledReason = locked
-          ? undefined
-          : model.access.available
-            ? modelDisabledCheck?.(providerModel, provider.id)
-            : t('Unavailable')
+        const disabledReason = model.access.available
+          ? modelDisabledCheck?.(providerModel, provider.id)
+          : t('Unavailable')
         const detail: DetailModel = {
           providerId: provider.id,
           providerName: provider.name,
@@ -139,7 +108,6 @@ export function ChatboxProviderRows({
           costLevel: model.costLevel,
           description: model.description,
           pricing: model.pricing,
-          locked,
           disabledReason,
         }
         const detailKey = `${provider.id}/${modelId}`
@@ -150,14 +118,13 @@ export function ChatboxProviderRows({
             providerModel={providerModel}
             selected={selectedProviderMatches && selectedModelId === modelId}
             favorited={isFavorited(provider.id, modelId)}
-            locked={locked}
             mobile={isMobile}
             brandedInset
             onSelect={() => onSelect(provider.id, modelId)}
             onFavorite={() => onToggleFavorite(provider.id, modelId)}
             onShowDetail={() => onShowMobileDetail(detail)}
             onDesktopDetailOpen={(anchor) =>
-              onDesktopDetailOpen(detailKey, detail, catalog.links?.modelPricing, anchor, catalog.links?.upgrade)
+              onDesktopDetailOpen(detailKey, detail, catalog.links?.modelPricing, anchor)
             }
             onDesktopDetailClose={onDesktopDetailClose}
             onDisabledSelect={() => onDisabledSelect(detail.modelId)}
@@ -168,7 +135,6 @@ export function ChatboxProviderRows({
 
     if (favoriteOnly && groupRows.length === 0) return null
 
-    const groupCollapsed = collapsedGroupIds.has(group.id)
     return (
       <div key={group.id}>
         {!favoriteOnly && (
@@ -184,51 +150,9 @@ export function ChatboxProviderRows({
             <Text span fw={650} size="sm" lh={1.15}>
               {getGroupLabel(group.id, t)}:
             </Text>
-            {group.isLocked && isChatboxAIAdvancedGroup(group.id) && (
-              <Text
-                span
-                td="underline"
-                c="chatbox-brand"
-                onClick={(event) => {
-                  event.stopPropagation()
-                  if (pageName) {
-                    trackUpgradeModelClick(pageName, 'list_model', null)
-                  }
-                  platform.openLink(catalog.links?.upgrade || FALLBACK_UPGRADE_URL)
-                }}
-              >
-                {t('Upgrade to Pro')}
-              </Text>
-            )}
           </Flex>
         )}
         {groupRows}
-        {!groupCollapsed && (
-          <>
-            {!favoriteOnly && group.isLocked && group.isFeaturedOnly && group.total > group.modelIds.length && (
-              <Button
-                variant="transparent"
-                size="xs"
-                fullWidth
-                rightSection={<ScalableIcon icon={IconChevronDown} size={14} />}
-                onClick={() => onSetAdvancedExpanded(true)}
-              >
-                {t('View all advanced models')}
-              </Button>
-            )}
-            {!favoriteOnly && group.isLocked && advancedExpanded && isChatboxAIAdvancedGroup(group.id) && (
-              <Button
-                variant="transparent"
-                size="xs"
-                fullWidth
-                rightSection={<ScalableIcon icon={IconChevronDown} size={14} className="rotate-180" />}
-                onClick={() => onSetAdvancedExpanded(false)}
-              >
-                {t('Collapse')}
-              </Button>
-            )}
-          </>
-        )}
       </div>
     )
   })

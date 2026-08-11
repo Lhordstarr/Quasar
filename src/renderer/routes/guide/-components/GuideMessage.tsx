@@ -14,11 +14,9 @@ import type { GuideToolPart, GuideUIMessage, UserType } from '../-hooks/useGuide
 import {
   AutoNewChatLoading,
   FreeTrialLink,
-  LoginButton,
   NewChatButton,
   NewChatTip,
   ProviderSettingsButton,
-  ViewLicenseButton,
 } from './ActionButton'
 import { ClaimWaitingCard } from './ClaimWaitingCard'
 import { SuggestedQuestions } from './SuggestedQuestions'
@@ -27,7 +25,6 @@ import { UserTypeCards } from './UserTypeCards'
 interface GuideMessageProps {
   message: GuideUIMessage
   onSelectUserType?: (type: UserType) => void
-  onLoginSuccess?: () => void
   onQuestionClick?: (question: string) => void
   onClaimStart?: () => void
   onClaimDetected?: (license: UserLicense) => void
@@ -40,7 +37,6 @@ interface GuideMessageProps {
 function ToolPartRenderer({
   part,
   onSelectUserType,
-  onLoginSuccess,
   onQuestionClick,
   onClaimStart,
   onClaimDetected,
@@ -48,7 +44,6 @@ function ToolPartRenderer({
 }: {
   part: GuideToolPart
   onSelectUserType?: (type: UserType) => void
-  onLoginSuccess?: () => void
   onQuestionClick?: (question: string) => void
   onClaimStart?: () => void
   onClaimDetected?: (license: UserLicense) => void
@@ -58,10 +53,6 @@ function ToolPartRenderer({
     case 'show_user_type_cards':
       if (!onSelectUserType) return null
       return <UserTypeCards onSelect={onSelectUserType} disabled={disabled} />
-
-    case 'show_login_button':
-      if (!onLoginSuccess) return null
-      return <LoginButton onLoginSuccess={onLoginSuccess} />
 
     case 'show_provider_settings_button':
       return <ProviderSettingsButton />
@@ -81,9 +72,6 @@ function ToolPartRenderer({
 
     case 'show_new_chat_tip':
       return <NewChatTip />
-
-    case 'show_view_license_button':
-      return <ViewLicenseButton />
 
     case 'show_suggested_questions':
       if (!onQuestionClick) return null
@@ -109,7 +97,6 @@ function ToolPartRenderer({
 export function GuideMessage({
   message,
   onSelectUserType,
-  onLoginSuccess,
   onQuestionClick,
   onClaimStart,
   onClaimDetected,
@@ -179,36 +166,33 @@ export function GuideMessage({
             {/* Tool parts - rendered outside the text container */}
             <Stack gap="xs" mt={hasTextContent ? 'xs' : 0}>
               {message.parts.map((part) => {
-                if (part.type.startsWith('tool-')) {
-                  const toolPart = part as GuideToolPart
-                  // Always render certain tools regardless of message position:
-                  // - show_user_type_cards: selection state persists
-                  // - show_login_button: maintains its own success state
-                  // - show_suggested_questions: users can continue clicking questions
-                  // Only hide other tools for non-last messages
-                  if (
-                    !isLastMessage &&
-                    toolPart.toolName !== 'show_user_type_cards' &&
-                    toolPart.toolName !== 'show_login_button' &&
-                    toolPart.toolName !== 'show_suggested_questions'
-                  ) {
-                    return null
+                  if (part.type.startsWith('tool-')) {
+                    const toolPart = part as GuideToolPart
+                    // Always render certain tools regardless of message position:
+                    // - show_user_type_cards: selection state persists
+                    // - show_suggested_questions: users can continue clicking questions
+                    // Only hide other tools for non-last messages
+                    if (
+                      !isLastMessage &&
+                      toolPart.toolName !== 'show_user_type_cards' &&
+                      toolPart.toolName !== 'show_suggested_questions'
+                    ) {
+                      return null
+                    }
+                    // Suggested questions should always be clickable (not disabled)
+                    const shouldDisable = !isLastMessage && toolPart.toolName !== 'show_suggested_questions'
+                    return (
+                      <ToolPartRenderer
+                        key={toolPart.toolCallId}
+                        part={toolPart}
+                        onSelectUserType={onSelectUserType}
+                        onQuestionClick={onQuestionClick}
+                        onClaimStart={onClaimStart}
+                        onClaimDetected={onClaimDetected}
+                        disabled={shouldDisable}
+                      />
+                    )
                   }
-                  // Suggested questions should always be clickable (not disabled)
-                  const shouldDisable = !isLastMessage && toolPart.toolName !== 'show_suggested_questions'
-                  return (
-                    <ToolPartRenderer
-                      key={toolPart.toolCallId}
-                      part={toolPart}
-                      onSelectUserType={onSelectUserType}
-                      onLoginSuccess={onLoginSuccess}
-                      onQuestionClick={onQuestionClick}
-                      onClaimStart={onClaimStart}
-                      onClaimDetected={onClaimDetected}
-                      disabled={shouldDisable}
-                    />
-                  )
-                }
                 return null
               })}
             </Stack>

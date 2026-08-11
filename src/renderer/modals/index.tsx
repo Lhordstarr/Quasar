@@ -1,5 +1,4 @@
 import NiceModal from '@ebay/nice-modal-react'
-import CopilotSettingsModal from '../routes/copilots/-components/CopilotSettingsModal'
 import AgentModeRewardClaimSuccess from './AgentModeRewardClaimSuccess'
 import AppStoreRating from './AppStoreRating'
 import ArtifactPreview from './ArtifactPreview'
@@ -33,4 +32,3 @@ NiceModal.register('report-content', ReportContent)
 NiceModal.register('model-edit', ModelEdit)
 NiceModal.register('thread-name-edit', ThreadNameEdit)
 NiceModal.register('vibedrop-publish', VibedropPublish)
-NiceModal.register('copilot-settings', CopilotSettingsModal)

@@ -59,7 +59,7 @@ export const ModalRegistryStates: StoryObj = {
         <Text size="sm" c="dimmed">
           Registered modal ids include welcome, file-parse-error, content-viewer, session-settings, app-store-rating,
           agent-mode-reward-claim-success, artifact-preview, clear-session-list, export-chat, message-edit, json-viewer,
-          report-content, model-edit, thread-name-edit, vibedrop-publish, and copilot-settings.
+          report-content, model-edit, thread-name-edit, and vibedrop-publish.
         </Text>
       </Paper>
     </Stack>

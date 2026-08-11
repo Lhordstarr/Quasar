@@ -8,7 +8,6 @@ import { AdaptiveModal } from '@/components/common/AdaptiveModal'
 import { ScalableIcon } from '@/components/common/ScalableIcon'
 import { AppTooltip as Tooltip } from '@/components/ui/tooltip'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
-import { navigateToSettings } from '@/modals/Settings'
 import { issueVibedropKey } from '@/packages/remote'
 import {
   clearCachedVibedropKey,
@@ -123,11 +122,6 @@ const VibedropPublish = NiceModal.create(({ html, uniqueId, sessionId }: Vibedro
     }
   }
 
-  const goLogin = () => {
-    navigateToSettings('/provider/chatbox-ai')
-    onClose()
-  }
-
   useEffect(() => {
     if (isLoggedIn && stage === 'login_required') {
       setStage('form')
@@ -222,9 +216,6 @@ const VibedropPublish = NiceModal.create(({ html, uniqueId, sessionId }: Vibedro
             <AdaptiveModal.Actions>
               <Button variant="default" onClick={onClose}>
                 {t('Close')}
-              </Button>
-              <Button onClick={goLogin} c="white">
-                {t('Sign in')}
               </Button>
             </AdaptiveModal.Actions>
           </>

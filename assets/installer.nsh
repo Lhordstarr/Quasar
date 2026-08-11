@@ -1,7 +1,7 @@
 !include LogicLib.nsh
 
 ; electron-builder's default close request sends WM_CLOSE on some Windows
-; installations. Chatbox remains alive after its last window closes because it
+; installations. Quasar remains alive after its last window closes because it
 ; owns a tray icon, so ask the running instance to quit explicitly first.
 Var /GLOBAL pid
 
@@ -34,9 +34,9 @@ Var /GLOBAL pid
         Goto installerWaitForAppExit
       ${EndIf}
 
-      ; Older Chatbox versions do not understand --quit-for-install. Fall back
+      ; Older Quasar versions do not understand --quit-for-install. Fall back
       ; to electron-builder's process termination after the graceful timeout.
-      DetailPrint "Graceful exit timed out; force-closing Chatbox"
+      DetailPrint "Graceful exit timed out; force-closing Quasar"
       StrCpy $pid 0
       !insertmacro KILL_PROCESS "${APP_EXECUTABLE_FILENAME}" 1
 

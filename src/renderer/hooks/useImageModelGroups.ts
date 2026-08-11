@@ -50,6 +50,8 @@ export function useImageModelGroups(): ImageModelGroup[] {
   const chatboxProvider = providers.find((p) => p.id === ModelProviderEnum.ChatboxAI)
   const openAIProvider = providers.find((p) => p.id === ModelProviderEnum.OpenAI)
   const geminiProvider = providers.find((p) => p.id === ModelProviderEnum.Gemini)
+  const togetherProvider = providers.find((p) => p.id === ModelProviderEnum.Together)
+  const huggingFaceProvider = providers.find((p) => p.id === ModelProviderEnum.HuggingFace)
   const customGeminiProviders = providers.filter((p) => p.isCustom && p.type === ModelProviderType.Gemini)
 
   const openAIImageModels = useProviderImageModels(ModelProviderEnum.OpenAI, !!openAIProvider)
@@ -57,6 +59,9 @@ export function useImageModelGroups(): ImageModelGroup[] {
     ModelProviderEnum.Gemini,
     !!geminiProvider || customGeminiProviders.length > 0
   )
+  const pollinationsImageModels = useProviderImageModels(ModelProviderEnum.Pollinations, true)
+  const togetherImageModels = useProviderImageModels(ModelProviderEnum.Together, !!togetherProvider)
+  const huggingFaceImageModels = useProviderImageModels(ModelProviderEnum.HuggingFace, !!huggingFaceProvider)
 
   return useMemo(() => {
     const groups: ImageModelGroup[] = []
@@ -115,15 +120,59 @@ export function useImageModelGroups(): ImageModelGroup[] {
       }
     }
 
+    if (pollinationsImageModels.length > 0) {
+      const manualModels = (providerSettingsMap?.[ModelProviderEnum.Pollinations]?.models || [])
+        .filter((model) => model.type === 'image')
+        .map(manualImageModelToOption)
+      groups.push({
+        label: 'Pollinations',
+        providerId: ModelProviderEnum.Pollinations,
+        models: mergeImageModels(pollinationsImageModels, manualModels),
+      })
+    }
+
+    if (togetherProvider) {
+      const manualModels = (providerSettingsMap?.[togetherProvider.id]?.models || [])
+        .filter((model) => model.type === 'image')
+        .map(manualImageModelToOption)
+      const models = mergeImageModels(togetherImageModels, manualModels)
+      if (models.length > 0) {
+        groups.push({
+          label: togetherProvider.name,
+          providerId: togetherProvider.id,
+          models,
+        })
+      }
+    }
+
+    if (huggingFaceProvider) {
+      const manualModels = (providerSettingsMap?.[huggingFaceProvider.id]?.models || [])
+        .filter((model) => model.type === 'image')
+        .map(manualImageModelToOption)
+      const models = mergeImageModels(huggingFaceImageModels, manualModels)
+      if (models.length > 0) {
+        groups.push({
+          label: huggingFaceProvider.name,
+          providerId: huggingFaceProvider.id,
+          models,
+        })
+      }
+    }
+
     return groups
   }, [
     chatboxProvider,
     openAIProvider,
     geminiProvider,
+    togetherProvider,
+    huggingFaceProvider,
     customGeminiProviders,
     providerSettingsMap,
     chatboxAIImageModels,
     openAIImageModels,
     geminiImageModels,
+    pollinationsImageModels,
+    togetherImageModels,
+    huggingFaceImageModels,
   ])
 }

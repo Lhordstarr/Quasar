@@ -630,7 +630,6 @@ const ImportExportDataSection = () => {
   const [exportItems, setExportItems] = useState<ExportDataItem[]>([
     ExportDataItem.Setting,
     ExportDataItem.Conversations,
-    ExportDataItem.Copilot,
   ])
 
   const isLoading = isExporting || isImporting || importRequiresRestart
@@ -859,7 +858,6 @@ const ImportExportDataSection = () => {
           { label: t('Settings'), value: ExportDataItem.Setting },
           { label: t('API KEY & License'), value: ExportDataItem.Key },
           { label: t('Chat History'), value: ExportDataItem.Conversations },
-          { label: t('My Copilots'), value: ExportDataItem.Copilot },
         ].map(({ label, value }) => (
           <Checkbox
             key={value}
@@ -972,7 +970,6 @@ enum ExportDataItem {
   Setting = 'setting',
   Key = 'key',
   Conversations = 'conversations',
-  Copilot = 'copilot',
 }
 
 const ExportLogsSection = () => {

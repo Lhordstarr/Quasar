@@ -15,40 +15,33 @@ describe('native web search', () => {
     expect(hasNativeWebSearchConfiguration({ provider: 'tavily', apiKey: '  ' })).toBe(false)
     expect(hasNativeWebSearchConfiguration({ provider: 'tavily', apiKey: 'tvly-key' })).toBe(true)
     expect(hasNativeWebSearchConfiguration({ provider: 'bing', apiKey: '' })).toBe(true)
-    expect(hasNativeWebSearchConfiguration({ provider: 'build-in', apiKey: '' })).toBe(false)
-    expect(hasNativeWebSearchConfiguration({ provider: 'build-in', apiKey: '' }, 'license-1')).toBe(true)
+    expect(hasNativeWebSearchConfiguration({ provider: 'duckduckgo', apiKey: '' })).toBe(true)
   })
 
-  it('searches through the chatbox build-in endpoint with the license key and injected headers', async () => {
+  it('searches through duckduckgo with a desktop User-Agent', async () => {
+    const html = `<div class="result results_links results_links_deep"><a rel="nofollow" class="result__a" href="https://ddg.test/page">Duck <strong>Result</strong></a><a class="result__snippet" href="https://ddg.test/page">Snippet one</a></div><div class="result results_links results_links_deep"><a rel="nofollow" class="result__a" href="https://two.test">Second result</a><a class="result__snippet" href="https://two.test">Snippet two</a></div>`
     const fetchFn = vi.fn(async () => ({
       ok: true,
       status: 200,
-      json: async () => ({ data: { links: [{ title: 'Doc', url: 'https://doc.test', content: 'snippet' }] } }),
+      text: async () => html,
     })) as unknown as typeof fetch
-    const items = await searchNativeWeb('chatbox', {
-      provider: 'build-in',
-      licenseKey: 'license-1',
-      chatboxApiOrigin: 'http://10.0.2.2:8095',
-      headers: { 'CHATBOX-PLATFORM': 'web', 'CHATBOX-VERSION': '1.2.3' },
-      fetchFn,
-    })
-    expect(items).toEqual([{ title: 'Doc', link: 'https://doc.test', snippet: 'snippet' }])
+    const items = await searchNativeWeb('chatbox', { provider: 'duckduckgo', fetchFn })
+    expect(items).toEqual([
+      { title: 'Duck Result', link: 'https://ddg.test/page', snippet: 'Snippet one' },
+      { title: 'Second result', link: 'https://two.test', snippet: 'Snippet two' },
+    ])
     const call = (fetchFn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(call[0]).toBe('http://10.0.2.2:8095/api/tool/web-search')
-    expect(call[1].headers.Authorization).toBe('license-1')
-    // Injected Chatbox platform headers ride along (renderer afetch/headers parity).
-    expect(call[1].headers).toMatchObject({ 'CHATBOX-PLATFORM': 'web', 'CHATBOX-VERSION': '1.2.3' })
+    expect(call[0]).toBe('https://html.duckduckgo.com/html/')
+    expect(String(call[1].body)).toContain('q=chatbox')
   })
 
-  it('surfaces the chatbox error body when the build-in endpoint fails', async () => {
+  it('surfaces a meaningful error when duckduckgo fails', async () => {
     const fetchFn = vi.fn(async () => ({
       ok: false,
-      status: 403,
-      json: async () => ({ error: 'License expired' }),
+      status: 429,
+      text: async () => '',
     })) as unknown as typeof fetch
-    await expect(searchNativeWeb('chatbox', { provider: 'build-in', licenseKey: 'bad', fetchFn })).rejects.toThrow(
-      'License expired'
-    )
+    await expect(searchNativeWeb('chatbox', { provider: 'duckduckgo', fetchFn })).rejects.toThrow('status 429')
   })
 
   it('extracts bing results without DOMParser', async () => {

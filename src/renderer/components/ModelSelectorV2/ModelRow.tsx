@@ -1,7 +1,7 @@
 import { ActionIcon, Flex, Text } from '@mantine/core'
 import { TestId } from '@shared/automation/testids'
 import type { ProviderModelInfo } from '@shared/types'
-import { IconBulb, IconEye, IconInfoCircle, IconLock, IconStar, IconStarFilled } from '@tabler/icons-react'
+import { IconBulb, IconEye, IconInfoCircle, IconStar, IconStarFilled } from '@tabler/icons-react'
 import clsx from 'clsx'
 import type { KeyboardEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,6 @@ export function ModelRow({
   providerModel,
   selected,
   favorited,
-  locked,
   mobile,
   hideFavorite,
   brandedInset,
@@ -31,7 +30,6 @@ export function ModelRow({
   providerModel: ProviderModelInfo
   selected: boolean
   favorited: boolean
-  locked?: boolean
   mobile?: boolean
   hideFavorite?: boolean
   brandedInset?: boolean
@@ -43,16 +41,12 @@ export function ModelRow({
   onDisabledSelect?: () => void
 }) {
   const { t } = useTranslation()
-  const isDisabled = !!detail.disabledReason && !locked
+  const isDisabled = !!detail.disabledReason
   const handleRowAction = () => {
     if (isDisabled) {
       onDisabledSelect?.()
       // Desktop reveals the reason via the hover detail card; on mobile, open it on tap.
       if (mobile) onShowDetail?.()
-      return
-    }
-    if (locked) {
-      onShowDetail?.()
       return
     }
     onSelect()
@@ -138,7 +132,6 @@ export function ModelRow({
         )}
       </Flex>
       <Flex align="center" gap={4} ml="auto" className="flex-shrink-0">
-        {locked && <ScalableIcon icon={IconLock} size={mobile ? 16 : 15} className="text-chatbox-tint-tertiary" />}
         {!hideFavorite && (
           <ActionIcon
             aria-label={favorited ? t('Remove from favorites') : t('Add to favorites')}

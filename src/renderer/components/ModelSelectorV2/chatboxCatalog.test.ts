@@ -1,16 +1,11 @@
 import { describe, expect, test } from 'vitest'
 import type { ChatboxAIModelList } from '@/packages/remote'
-import {
-  buildChatboxAIGroupViews,
-  isChatboxAIModelLocked,
-  isChatboxAIProPlan,
-  modelMatchesSearch,
-} from './chatboxCatalog'
+import { buildChatboxAIGroupViews, modelMatchesSearch } from './chatboxCatalog'
 
-function createCatalog(plan: string): ChatboxAIModelList {
+function createCatalog(): ChatboxAIModelList {
   return {
     provider: { id: 'chatbox-ai', name: 'Chatbox AI' },
-    license: { plan },
+    license: { plan: 'unknown' },
     groups: [
       {
         id: 'advanced',
@@ -60,66 +55,27 @@ function createCatalog(plan: string): ChatboxAIModelList {
       },
     },
     imageModels: [],
-    links: { modelPricing: 'https://chatboxai.app/en/model-pricing', upgrade: 'https://chatboxai.app/en/#pricing' },
+    links: { modelPricing: 'https://chatboxai.app/en/model-pricing' },
   }
 }
 
 describe('chatboxCatalog', () => {
-  test('treats only pro and pro_plus as advanced plans', () => {
-    expect(isChatboxAIProPlan('free')).toBe(false)
-    expect(isChatboxAIProPlan('lite')).toBe(false)
-    expect(isChatboxAIProPlan('unknown')).toBe(false)
-    expect(isChatboxAIProPlan(undefined)).toBe(false)
-    expect(isChatboxAIProPlan('pro')).toBe(true)
-    expect(isChatboxAIProPlan('pro_plus')).toBe(true)
-  })
-
-  test('locks advanced models for low-tier plans', () => {
-    expect(isChatboxAIModelLocked('advanced', 'free')).toBe(true)
-    expect(isChatboxAIModelLocked('advanced', 'lite')).toBe(true)
-    expect(isChatboxAIModelLocked('advanced', 'pro')).toBe(false)
-    expect(isChatboxAIModelLocked('basic', 'free')).toBe(false)
-  })
-
-  test('shows featured advanced models by default for low-tier plans', () => {
+  test('shows all models of every group regardless of plan', () => {
     const views = buildChatboxAIGroupViews({
-      catalog: createCatalog('free'),
+      catalog: createCatalog(),
       search: '',
-      expandedAdvanced: false,
       collapsedGroupIds: new Set(),
     })
 
-    expect(views[0]).toMatchObject({
-      id: 'advanced',
-      modelIds: ['chatboxai-4'],
-      isFeaturedOnly: true,
-      isLocked: true,
-    })
-  })
-
-  test('shows all advanced models when expanded or searching', () => {
-    const expanded = buildChatboxAIGroupViews({
-      catalog: createCatalog('free'),
-      search: '',
-      expandedAdvanced: true,
-      collapsedGroupIds: new Set(),
-    })
-    const searched = buildChatboxAIGroupViews({
-      catalog: createCatalog('free'),
-      search: 'claude',
-      expandedAdvanced: false,
-      collapsedGroupIds: new Set(),
-    })
-
-    expect(expanded[0].modelIds).toEqual(['chatboxai-4', 'gpt-5.5', 'claude-opus-4.8'])
-    expect(searched[0].modelIds).toEqual(['claude-opus-4.8'])
+    expect(views[0].modelIds).toEqual(['chatboxai-4', 'gpt-5.5', 'claude-opus-4.8'])
+    expect(views[1].modelIds).toEqual(['chatboxai-3.5', 'deepseek-v4-pro'])
+    expect(views.map((view) => view.total)).toEqual([3, 2])
   })
 
   test('collapses groups and preserves total count', () => {
     const views = buildChatboxAIGroupViews({
-      catalog: createCatalog('pro'),
+      catalog: createCatalog(),
       search: '',
-      expandedAdvanced: false,
       collapsedGroupIds: new Set(['basic']),
     })
 
@@ -129,9 +85,8 @@ describe('chatboxCatalog', () => {
 
   test('applies modelFilter to visible models and totals', () => {
     const views = buildChatboxAIGroupViews({
-      catalog: createCatalog('pro'),
+      catalog: createCatalog(),
       search: '',
-      expandedAdvanced: false,
       collapsedGroupIds: new Set(),
       modelFilter: (modelId) => modelId !== 'gpt-5.5',
     })

@@ -27,6 +27,9 @@ export enum ModelProviderEnum {
   OpenRouter = 'openrouter',
   Bedrock = 'bedrock',
   VercelAIGateway = 'vercel-ai-gateway',
+  Pollinations = 'pollinations',
+  Together = 'together-ai',
+  HuggingFace = 'huggingface',
   Custom = 'custom',
 }
 
@@ -36,4 +39,7 @@ export enum ModelProviderType {
   Gemini = 'gemini',
   Claude = 'claude',
   OpenAIResponses = 'openai-responses',
+  Pollinations = 'pollinations',
+  Together = 'together-ai',
+  HuggingFace = 'huggingface',
 }

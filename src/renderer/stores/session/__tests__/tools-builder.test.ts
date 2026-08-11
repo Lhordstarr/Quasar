@@ -29,7 +29,7 @@ const {
   },
   getSettingsMock: vi.fn(),
   isProMock: vi.fn(),
-  webSearchProvider: { current: 'build-in' },
+  webSearchProvider: { current: 'bing' },
   buildCodeExecutionToolsMock: vi.fn(),
   getSessionAttachmentRagToolSetMock: vi.fn(),
   skillsChangedListeners: new Set<() => void>(),
@@ -218,7 +218,7 @@ beforeEach(() => {
   settingsState.licensePlanName = undefined
   settingsState.licenseActivationMethod = undefined
   settingsState.hasExpiredLicense = false
-  webSearchProvider.current = 'build-in'
+  webSearchProvider.current = 'bing'
   isProMock.mockReturnValue(true)
   buildCodeExecutionToolsMock.mockReturnValue({
     description: 'code execution toolset',
@@ -387,6 +387,7 @@ describe('buildToolsForSession', () => {
   })
 
   test('webBrowsing=true exposes parse_link when configured search provider supports it', async () => {
+    webSearchProvider.current = 'tavily'
     const model = createMockModel()
     const result = await buildToolsForSession(model, {
       webBrowsing: true,

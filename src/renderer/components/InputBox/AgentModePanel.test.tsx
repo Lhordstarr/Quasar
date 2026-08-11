@@ -29,7 +29,7 @@ const mocks = vi.hoisted(() => {
   const settingsState = {
     extension: {
       webSearch: {
-        provider: 'build-in',
+        provider: 'bing',
         tavilyApiKey: '',
       },
     },
@@ -271,7 +271,7 @@ describe('AgentModePanel capability availability', () => {
     expect(mocks.trackWebSearchClickMock).toHaveBeenCalledWith(
       expect.objectContaining({ mode: 'chat_mode', sessionId: 'new' }),
       true,
-      'build-in'
+      'bing'
     )
   })
 

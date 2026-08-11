@@ -13,14 +13,14 @@ export interface NativeWebSearchResultItem {
 }
 
 /** Same provider set the renderer's Web Search settings expose. */
-export type NativeWebSearchProvider = 'build-in' | 'bing' | 'tavily' | 'bocha' | 'querit'
+export type NativeWebSearchProvider = 'bing' | 'tavily' | 'bocha' | 'querit' | 'duckduckgo'
 
 export const nativeWebSearchProviderOptions: Array<{ id: NativeWebSearchProvider; label: string }> = [
-  { id: 'build-in', label: 'Chatbox AI' },
   { id: 'bing', label: 'Bing Search' },
   { id: 'tavily', label: 'Tavily' },
   { id: 'bocha', label: 'BoCha' },
   { id: 'querit', label: 'Querit' },
+  { id: 'duckduckgo', label: 'DuckDuckGo' },
 ]
 
 export interface NativeWebSearchSettings {
@@ -30,11 +30,11 @@ export interface NativeWebSearchSettings {
   apiHost: string
 }
 
-// Web parity (defaults.ts extension.webSearch.provider): the Chatbox search API
-// is the default. Bare Bing scraping is unreliable from native HTTP clients --
-// without a real browser UA/cookies Bing serves a JS shell with zero results.
+// Web parity (defaults.ts extension.webSearch.provider): bare Bing scraping is the
+// only credential-free default. (Native clients can still be flaky against Bing without
+// a real browser UA/cookies -- it sometimes serves a JS shell with zero results.)
 export const defaultNativeWebSearchSettings: NativeWebSearchSettings = {
-  provider: 'build-in',
+  provider: 'bing',
   apiKey: '',
   apiHost: '',
 }
@@ -57,25 +57,14 @@ export interface NativeWebSearchOptions {
   provider?: NativeWebSearchProvider
   apiKey?: string
   apiHost?: string
-  /** Chatbox license key, used by the `build-in` provider. */
-  licenseKey?: string
-  /** Chatbox API origin override for the `build-in` provider. */
-  chatboxApiOrigin?: string
   signal?: AbortSignal
   fetchFn?: typeof fetch
   maxResults?: number
   /** Querit-only knobs (renderer settings webSearch.queritMaxResults / queritTimeRange). */
   queritTimeRange?: string | null
-  /**
-   * Extra headers merged into the request. The renderer's `build-in` provider injects the
-   * Chatbox platform headers (CHATBOX-PLATFORM/VERSION/...) so the shared call matches the
-   * old `webBrowsing` remote request.
-   */
-  headers?: Record<string, string>
 }
 
 const TAVILY_DEFAULT_HOST = 'https://api.tavily.com'
-const CHATBOX_DEFAULT_ORIGIN = 'https://api.chatboxai.app'
 const DEFAULT_MAX_RESULTS = 8
 
 interface TavilyResponseItem {
@@ -86,13 +75,12 @@ interface TavilyResponseItem {
 
 export function hasNativeWebSearchConfiguration(
   settings: Pick<NativeWebSearchSettings, 'provider' | 'apiKey'>,
-  licenseKey?: string
+  _licenseKey?: string
 ): boolean {
   if (settings.provider === 'tavily' || settings.provider === 'bocha' || settings.provider === 'querit') {
     return Boolean(settings.apiKey.trim())
   }
-  if (settings.provider === 'build-in') return Boolean(licenseKey?.trim())
-  return true // bing needs no credentials
+  return true // bing and duckduckgo need no credentials
 }
 
 export async function searchNativeWeb(
@@ -101,9 +89,9 @@ export async function searchNativeWeb(
 ): Promise<NativeWebSearchResultItem[]> {
   const provider = options.provider ?? 'tavily'
   if (provider === 'bing') return searchNativeBing(query, options)
-  if (provider === 'build-in') return searchNativeChatbox(query, options)
   if (provider === 'bocha') return searchNativeBocha(query, options)
   if (provider === 'querit') return searchNativeQuerit(query, options)
+  if (provider === 'duckduckgo') return searchNativeDuckDuckGo(query, options)
   return searchNativeTavily(query, options)
 }
 
@@ -276,48 +264,48 @@ async function searchNativeTavily(
 }
 
 /**
- * Chatbox build-in search — single implementation behind the renderer's `build-in`
- * provider (which injects an afetch `fetchFn` for retry + Chatbox error parsing, plus the
- * Chatbox platform `headers`) and the native shell. `POST /api/tool/web-search`, license
- * key as Authorization. Replaces the old `webBrowsing` remote fork.
+ * DuckDuckGo html.duckduckgo.com search — the renderer DuckDuckGoSearch port.
+ * React Native has no DOMParser, so the `.result__a` / `.result__snippet` items are
+ * extracted with tolerant regexes against the html.duckduckgo.com results page.
  */
-async function searchNativeChatbox(
+async function searchNativeDuckDuckGo(
   query: string,
   options: NativeWebSearchOptions
 ): Promise<NativeWebSearchResultItem[]> {
   const fetchFn = options.fetchFn ?? fetch
-  const origin = (options.chatboxApiOrigin?.trim() || CHATBOX_DEFAULT_ORIGIN).replace(/\/+$/, '')
-
-  const response = await fetchFn(`${origin}/api/tool/web-search`, {
+  const maxResults = options.maxResults ?? DEFAULT_MAX_RESULTS
+  const response = await fetchFn('https://html.duckduckgo.com/html/', {
     method: 'POST',
     headers: {
-      Authorization: options.licenseKey ?? '',
-      'Content-Type': 'application/json',
-      ...options.headers,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     },
-    body: JSON.stringify({ query }),
+    body: `q=${encodeURIComponent(query)}&df=y`,
     signal: options.signal,
   })
-  const payload = (await response.json().catch(() => null)) as {
-    error?: unknown
-    data?: { links?: Array<{ title?: string; url?: string; content?: string }> }
-  } | null
   if (!response.ok) {
-    // afetch (renderer) throws its parsed Chatbox error before we get here; this path
-    // gives the native plain-fetch caller a meaningful message instead of a bare status.
-    const message =
-      payload && typeof payload.error === 'string' ? payload.error : `Web search failed with status ${response.status}`
-    throw new Error(message)
+    throw new Error(`Web search failed with status ${response.status}`)
   }
-  // No client-side cap or link filtering: matches the old `webBrowsing` remote call, which
-  // returned every link the Chatbox backend sent (already a bounded ~10 Serper organic
-  // results + PeopleAlsoAsk set), so trimming here would only drop the tail.
-  const links = payload?.data?.links ?? []
-  return links.map((link) => ({
-    title: link.title ?? '',
-    link: link.url ?? '',
-    snippet: link.content ?? '',
-  }))
+  const html = await response.text()
+  return extractDuckDuckGoResults(html).slice(0, maxResults)
+}
+
+export function extractDuckDuckGoResults(html: string): NativeWebSearchResultItem[] {
+  const items: NativeWebSearchResultItem[] = []
+  const resultPattern = /<div[^>]*class="[^"]*results_links[^"]*"[\s\S]*?(?=<div[^>]*class="[^"]*results_links|$)/g
+  for (const block of html.match(resultPattern) ?? []) {
+    const anchor = /<a[^>]*class="[^"]*result__a[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/.exec(block)
+    if (!anchor) continue
+    const link = decodeHtmlEntities(anchor[1])
+    const title = decodeHtmlEntities(stripTags(anchor[2])).trim()
+    if (!link || !title) continue
+    const snippetMatch = /<a[^>]*class="[^"]*result__snippet[^"]*"[^>]*>([\s\S]*?)<\/a>/.exec(block)
+    const snippet = snippetMatch ? decodeHtmlEntities(stripTags(snippetMatch[1])).trim() : ''
+    items.push({ title, link, snippet })
+  }
+  return items
 }
 
 /**

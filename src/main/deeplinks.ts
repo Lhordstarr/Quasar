@@ -20,7 +20,7 @@ export function handleDeepLink(mainWindow: BrowserWindow, link: string) {
   }
 
   // handle `chatbox://auth/callback?ticket_id=xxx&status=success`
-  // // 不需要，实际跳回到 app 后业务hooks useLogin 会处理后续动作
+  // 已废弃：邮箱验证码登录已移除
   // if (url.hostname === 'auth' && url.pathname === '/callback') {
   //   const ticketId = url.searchParams.get('ticket_id') || ''
   //   const status = url.searchParams.get('status') || ''

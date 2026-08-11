@@ -55,6 +55,23 @@ function getErrorRecordUpdate(
   }
 }
 
+function isRateLimitOrQuotaError(error: unknown): boolean {
+  if (error instanceof BaseError && error.code) {
+    return [402, 403, 429].includes(error.code)
+  }
+  if (
+    error instanceof Error &&
+    /quota|rate limit|too many requests|insufficient balance|429|402|403/i.test(error.message)
+  ) {
+    return true
+  }
+  return false
+}
+
+function withRateLimitHint(error: string): string {
+  return `${error}\n\nTip: your provider hit a rate limit or quota. You can switch to the free Pollinations provider in the image creator.`
+}
+
 function getFailedImageGenerationError(
   result: ImageGenerationTaskResponse,
   fallback: string
@@ -400,7 +417,12 @@ async function generateImagesDirect(recordId: string, params: GenerateImageParam
 
     log.error('Direct image generation failed:', err)
 
-    const updatedRecord = await updateRecord(recordId, getErrorRecordUpdate(err))
+    const errorRecordUpdate = getErrorRecordUpdate(err)
+    if (isRateLimitOrQuotaError(err) && errorRecordUpdate.error) {
+      errorRecordUpdate.error = withRateLimitHint(errorRecordUpdate.error)
+    }
+
+    const updatedRecord = await updateRecord(recordId, errorRecordUpdate)
     if (updatedRecord) {
       queryClient.setQueryData([IMAGE_GEN_QUERY_KEY, updatedRecord.id], updatedRecord)
     }

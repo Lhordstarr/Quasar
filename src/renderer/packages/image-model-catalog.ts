@@ -1,4 +1,9 @@
 import { isUsingOAuth, mergeSharedOAuthProviderSettings } from '@shared/oauth'
+import {
+  HUGGING_FACE_IMAGE_MODELS,
+  POLLINATIONS_IMAGE_MODELS,
+  TOGETHER_IMAGE_MODELS,
+} from '@shared/providers/definitions/image-models'
 import { ModelProviderEnum, ModelProviderType, type ProviderModelInfo, type Settings } from '@shared/types'
 import { getLogger } from '@/lib/utils'
 import { getModelManifest, type RemoteModelInfo } from '@/packages/remote'
@@ -52,6 +57,18 @@ export async function loadProviderImageModels(
   provider: ModelProviderEnum,
   options: { licenseKey?: string; language?: string } = {}
 ): Promise<ImageModelOption[]> {
+  // Providers whose image model catalog ships locally (no remote manifest exists).
+  switch (provider) {
+    case ModelProviderEnum.Pollinations:
+      return POLLINATIONS_IMAGE_MODELS.map((m) => ({ modelId: m.modelId, displayName: m.nickname }))
+    case ModelProviderEnum.Together:
+      return TOGETHER_IMAGE_MODELS.map((m) => ({ modelId: m.modelId, displayName: m.nickname }))
+    case ModelProviderEnum.HuggingFace:
+      return HUGGING_FACE_IMAGE_MODELS.map((m) => ({ modelId: m.modelId, displayName: m.nickname }))
+    default:
+      break
+  }
+
   const manifest = await getModelManifest({
     aiProvider: provider,
     language: options.language,
@@ -152,6 +169,28 @@ export async function getAvailableImageModels(
         mergeImageModels(remoteModels, manualImageModels(settings, ModelProviderEnum.OpenAI))
       )
     )
+  }
+
+  // Pollinations: free image generation, always available without a key.
+  catalog.push(
+    ...catalogEntries(
+      ModelProviderEnum.Pollinations,
+      mergeImageModels(
+        POLLINATIONS_IMAGE_MODELS.map((m) => ({ modelId: m.modelId, displayName: m.nickname })),
+        manualImageModels(settings, ModelProviderEnum.Pollinations)
+      )
+    )
+  )
+
+  // Together AI and Hugging Face: shown once an API key is configured.
+  for (const provider of [ModelProviderEnum.Together, ModelProviderEnum.HuggingFace] as const) {
+    if (isBuiltinProviderConfigured(provider, settings)) {
+      const localModels =
+        provider === ModelProviderEnum.Together
+          ? TOGETHER_IMAGE_MODELS.map((m) => ({ modelId: m.modelId, displayName: m.nickname }))
+          : HUGGING_FACE_IMAGE_MODELS.map((m) => ({ modelId: m.modelId, displayName: m.nickname }))
+      catalog.push(...catalogEntries(provider, mergeImageModels(localModels, manualImageModels(settings, provider))))
+    }
   }
 
   return catalog

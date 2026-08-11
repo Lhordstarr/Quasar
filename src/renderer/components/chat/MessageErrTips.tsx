@@ -376,7 +376,7 @@ export default function MessageErrTips(props: {
               <a
                 className="cursor-pointer underline font-bold hover:text-blue-600 transition-colors"
                 onClick={() => {
-                  navigateToSettings(`/provider/${ModelProviderEnum.ChatboxAI}`)
+                  navigateToSettings('/provider')
                 }}
               />
             ),

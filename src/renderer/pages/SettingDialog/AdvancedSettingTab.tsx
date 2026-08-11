@@ -146,7 +146,6 @@ enum ExportDataItem {
   Setting = 'setting',
   Key = 'key',
   Conversations = 'conversations',
-  Copilot = 'copilot',
 }
 
 function ExportAndImport(props: { onCancel: () => void }) {
@@ -156,7 +155,6 @@ function ExportAndImport(props: { onCancel: () => void }) {
   const [exportItems, setExportItems] = useState<ExportDataItem[]>([
     ExportDataItem.Setting,
     ExportDataItem.Conversations,
-    ExportDataItem.Copilot,
   ])
   const importInputRef = useRef<HTMLInputElement>(null)
   const [importTips, setImportTips] = useState('')
@@ -180,9 +178,6 @@ function ExportAndImport(props: { onCancel: () => void }) {
           delete data[key]
         }
       })
-    }
-    if (!exportItems.includes(ExportDataItem.Copilot)) {
-      delete data[StorageKey.MyCopilots]
     }
     const date = new Date()
     data['__exported_items'] = exportItems
@@ -278,7 +273,6 @@ function ExportAndImport(props: { onCancel: () => void }) {
               { label: t('Settings'), value: ExportDataItem.Setting },
               { label: t('API KEY & License'), value: ExportDataItem.Key },
               { label: t('Chat History'), value: ExportDataItem.Conversations },
-              { label: t('My Copilots'), value: ExportDataItem.Copilot },
             ].map((item) => (
               <FormControlLabel
                 key={item.value}

@@ -29,7 +29,6 @@ export const JK_PAGE_NAMES = {
   CHAT_PAGE: 'chat_page',
   SETTING_PAGE: 'setting_page',
   IMAGE_PAGE: 'image_page',
-  COPILOTS_PAGE: 'copilots_page',
   HELP_PAGE: 'help_page',
   ABOUT_PAGE: 'about_page',
 } as const

@@ -1,26 +1,9 @@
 import type { ChatboxAIModelList } from '@/packages/remote'
 
-export type ChatboxAIPlan = ChatboxAIModelList['license']['plan'] | undefined
-
 export type ChatboxAIGroupView = {
   id: string
   modelIds: string[]
   total: number
-  isAdvanced: boolean
-  isLocked: boolean
-  isFeaturedOnly: boolean
-}
-
-export function isChatboxAIProPlan(plan: ChatboxAIPlan): boolean {
-  return plan === 'pro' || plan === 'pro_plus'
-}
-
-export function isChatboxAIAdvancedGroup(groupId: string): boolean {
-  return groupId === 'advanced'
-}
-
-export function isChatboxAIModelLocked(groupId: string, plan: ChatboxAIPlan): boolean {
-  return isChatboxAIAdvancedGroup(groupId) && !isChatboxAIProPlan(plan)
 }
 
 export function getChatboxAIModelName(model: { modelName?: string; modelId: string }): string {
@@ -44,22 +27,15 @@ export function modelMatchesSearch(
 export function buildChatboxAIGroupViews(params: {
   catalog: ChatboxAIModelList
   search: string
-  expandedAdvanced: boolean
   collapsedGroupIds: Set<string>
   modelFilter?: (modelId: string) => boolean
 }): ChatboxAIGroupView[] {
-  const { catalog, search, expandedAdvanced, collapsedGroupIds, modelFilter } = params
-  const isSearching = search.trim().length > 0
+  const { catalog, search, collapsedGroupIds, modelFilter } = params
 
   return catalog.groups.map((group) => {
-    const isAdvanced = isChatboxAIAdvancedGroup(group.id)
-    const isLocked = isChatboxAIModelLocked(group.id, catalog.license.plan)
-    const featuredIds = group.featuredModelIds?.length ? group.featuredModelIds : group.modelIds
-    const shouldShowFeaturedOnly = isAdvanced && isLocked && !expandedAdvanced && !isSearching
-    const sourceIds = shouldShowFeaturedOnly ? featuredIds : group.modelIds
     const visibleIds = collapsedGroupIds.has(group.id)
       ? []
-      : sourceIds.filter((modelId) => {
+      : group.modelIds.filter((modelId) => {
           const model = catalog.models[modelId]
           if (!model) return false
           if (modelFilter && !modelFilter(modelId)) return false
@@ -76,9 +52,6 @@ export function buildChatboxAIGroupViews(params: {
       id: group.id,
       modelIds: visibleIds,
       total,
-      isAdvanced,
-      isLocked,
-      isFeaturedOnly: shouldShowFeaturedOnly,
     }
   })
 }

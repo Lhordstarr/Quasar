@@ -36,11 +36,11 @@ vi.mock('./tavily', () => {
   }
 })
 
-vi.mock('./chatbox-search', () => {
+vi.mock('./duckduckgo', () => {
   return {
-    ChatboxSearch: class {
+    DuckDuckGoSearch: class {
       search = vi.fn().mockResolvedValue({
-        items: [{ title: 'Chatbox Result', snippet: 'test', link: 'https://example.com' }],
+        items: [{ title: 'DuckDuckGo Result', snippet: 'test', link: 'https://example.com' }],
       })
     },
   }

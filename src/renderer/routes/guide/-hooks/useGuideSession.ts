@@ -431,7 +431,7 @@ Chatbox is an **all-in-one AI chat client** that supports 30+ mainstream models 
       const responseContent =
         type === 'novice'
           ? t(
-              'Great! Chatbox AI is our all-in-one service designed for new users - it works out of the box with no complex setup required.\n\nClick the login button below, then enter your email and verification code in the popup to sign in.'
+              'Great! You can use Chatbox with your own API key or a local model like Ollama, or activate a Chatbox AI license key.\n\nClick the button below to set up your API key or Ollama.'
             )
           : t(
               "Excellent! You're ready to explore.\n\nClick the button below to configure your API directly. If you need help later, just click the **Help** button in the sidebar. Enjoy!"
@@ -444,14 +444,14 @@ Chatbox is an **all-in-one AI chat client** that supports 30+ mainstream models 
       if (type === 'novice') {
         toolParts = [
           {
-            type: 'tool-show_login_button',
-            toolCallId: `login-btn-${Date.now()}`,
-            toolName: 'show_login_button',
+            type: 'tool-show_provider_settings_button',
+            toolCallId: `provider-settings-btn-${Date.now()}`,
+            toolName: 'show_provider_settings_button',
             state: 'result',
             result: { displayed: true },
           },
         ]
-        setOnboardingStep('login_flow')
+        setOnboardingStep('selection')
       } else {
         toolParts = [
           {
@@ -544,7 +544,7 @@ Chatbox is an **all-in-one AI chat client** that supports 30+ mainstream models 
     } else {
       await streamFixedMessage(
         t(
-          "You're logged in! Claim your **free plan** below to unlock Chatbox AI features. If you have any questions, feel free to click the Help button in the bottom left corner anytime."
+          "You're all set! Claim your **free plan** below to unlock Chatbox AI features. If you have any questions, feel free to click the Help button in the bottom left corner anytime."
         ),
         [
           {
@@ -800,9 +800,9 @@ Chatbox is an **all-in-one AI chat client** that supports 30+ mainstream models 
   }, [clearSession])
 
   /**
-   * Debug: Skip directly to login success state for testing
+   * Debug: Skip directly to the completion state for testing
    */
-  const debugSkipToLoginSuccess = useCallback(() => {
+  const debugSkipToCompletion = useCallback(() => {
     // Cancel any ongoing streaming
     if (greetingCancelRef.current) {
       greetingCancelRef.current()
@@ -869,7 +869,7 @@ Chatbox is an **all-in-one AI chat client** that supports 30+ mainstream models 
 
     setMessages(fakeMessages)
     setUserTypeSelected('novice')
-    setOnboardingStep('login_flow')
+    setOnboardingStep('selection')
   }, [t])
 
   return {
@@ -886,7 +886,7 @@ Chatbox is an **all-in-one AI chat client** that supports 30+ mainstream models 
     handleConfigComplete,
     clearSession,
     debugResetGuide,
-    debugSkipToLoginSuccess,
+    debugSkipToCompletion,
     debugTriggerRoundLimit,
     canSendMessage,
     hasValidConfig,

@@ -213,7 +213,7 @@ const SessionSettingsModal = NiceModal.create(
 
             <Textarea
               label={t('Instruction (System Prompt)')}
-              placeholder={t('Copilot Prompt Demo') || ''}
+              placeholder="You are a helpful assistant."
               autosize
               minRows={2}
               maxRows={12}

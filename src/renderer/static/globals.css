@@ -290,11 +290,6 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-.copilot-picker-scroll-area .mantine-ScrollArea-scrollbar {
-  padding-left: var(--mantine-spacing-md);
-  padding-right: var(--mantine-spacing-md);
-}
-
 .pswp__top-bar {
   margin-top: var(--mobile-safe-area-inset-top);
   -webkit-app-region: no-drag;

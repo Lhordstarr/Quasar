@@ -1,4 +1,4 @@
-import type { CopilotDetail, Session, Settings } from '@shared/types'
+import type { Session, Settings } from '@shared/types'
 import {
   BACKUP_MANIFEST_PATH,
   backupEntryByteLimit,
@@ -9,7 +9,6 @@ import {
 } from './archive-layout'
 import { base64ToBytes, bytesToBase64, decodeStoredBlob, sha256Checksum } from './codec'
 import {
-  restoreCopilotResourceKeys,
   restoreSessionMetaResourceKeys,
   restoreSessionResourceKeys,
   restoreSettingsResourceKeys,
@@ -267,7 +266,6 @@ export async function importBackupArchive(file: File, options: BackupImportOptio
     const changedKeys = [
       ...manifest.sessions.map((session) => backupSessionStorageKey(session.id)),
       ...(manifest.data.settings ? [BackupStorageKey.Settings] : []),
-      ...(manifest.data.copilots ? [BackupStorageKey.MyCopilots] : []),
       ...(manifest.data.sessionSettings
         ? [BackupStorageKey.ChatSessionSettings, BackupStorageKey.PictureSessionSettings]
         : []),
@@ -345,12 +343,8 @@ export async function importBackupArchive(file: File, options: BackupImportOptio
       )
     }
     if (manifest.data.copilots) {
-      const value = stagedEntries.get(manifest.data.copilots.path)?.value
-      if (!Array.isArray(value)) throw new Error('Invalid copilots entry')
-      await options.storage.setItemNow(
-        BackupStorageKey.MyCopilots,
-        restoreCopilotResourceKeys(value as CopilotDetail[], resourceKeyMap)
-      )
+      const staged = stagedEntries.get(manifest.data.copilots.path)
+      if (staged && !Array.isArray(staged.value)) throw new Error('Invalid copilots entry')
     }
     if (manifest.data.sessionSettings) {
       const value = stagedEntries.get(manifest.data.sessionSettings.path)?.value

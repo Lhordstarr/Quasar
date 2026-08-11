@@ -1,8 +1,7 @@
-import type { CopilotDetail, Session, SessionMetaRecord, Settings } from '@shared/types'
+import type { Session, SessionMetaRecord, Settings } from '@shared/types'
 import { cleanSettingsForBackup } from '@shared/utils/backup'
 import type { StreamingExportResult } from '@/platform/interfaces'
 import {
-  BACKUP_COPILOTS_PATH,
   BACKUP_MANIFEST_PATH,
   BACKUP_SESSION_SETTINGS_PATH,
   BACKUP_SETTINGS_PATH,
@@ -205,20 +204,10 @@ export async function exportBackupArchive(options: BackupExportOptions): Promise
         cleanedSettings = cleanSettingsForBackup(settings, options.includeKeys)
         addResourceReferences(
           resourceCandidates,
-          collectGlobalResourceReferences(cleanedSettings as Partial<Settings>, undefined)
+          collectGlobalResourceReferences(cleanedSettings as Partial<Settings>)
         )
         const { archive, descriptor } = await jsonEntry(BACKUP_SETTINGS_PATH, cleanedSettings)
         data.settings = descriptor
-        yield archive
-      }
-    }
-
-    if (options.exportItems.includes('copilot')) {
-      const copilots = await options.storage.getItem<CopilotDetail[] | null>(BackupStorageKey.MyCopilots, null)
-      if (copilots) {
-        addResourceReferences(resourceCandidates, collectGlobalResourceReferences(undefined, copilots))
-        const { archive, descriptor } = await jsonEntry(BACKUP_COPILOTS_PATH, copilots)
-        data.copilots = descriptor
         yield archive
       }
     }

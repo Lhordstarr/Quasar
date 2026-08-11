@@ -41,7 +41,6 @@ export type DetailModel = {
   costLevel?: string
   description?: string
   pricing?: ChatboxAIModel['pricing']
-  locked?: boolean
   disabledReason?: string
 }
 
@@ -49,7 +48,6 @@ export type DesktopDetailState = {
   key: string
   model: DetailModel
   pricingLink?: string
-  upgradeLink?: string
   left: number
   top: number
 }

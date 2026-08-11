@@ -23,7 +23,7 @@ export interface GuideMessage {
 export interface GuideRequest {
   messages: GuideMessage[]
   device_id: string
-  onboarding_step?: 'greeting' | 'selection' | 'login_flow' | 'completed'
+  onboarding_step?: 'greeting' | 'selection' | 'completed'
   is_logged_in?: boolean
   stream: boolean
 }

@@ -1,4 +1,4 @@
-import type { CopilotDetail, Session, SessionMetaRecord, Settings } from '@shared/types'
+import type { Session, SessionMetaRecord, Settings } from '@shared/types'
 import { unzipSync, zipSync } from 'fflate'
 import { describe, expect, it, vi } from 'vitest'
 import { bytesToBase64 } from './codec'
@@ -200,7 +200,7 @@ describe('ZIP backup round trip', () => {
     expect(destinationMeta.records.size).toBe(2)
   })
 
-  it('round-trips global settings, copilots, and session settings while pruning unavailable images', async () => {
+  it('round-trips global settings and session settings while pruning unavailable images', async () => {
     const source = new MemoryStorage()
     const sourceSettings = {
       userAvatarKey: 'picture:missing',
@@ -208,24 +208,14 @@ describe('ZIP backup round trip', () => {
       licenseKey: 'secret-license',
       providers: { custom: { apiKey: 'secret-api-key', apiHost: 'https://example.com' } },
     } as unknown as Settings
-    const copilots: CopilotDetail[] = [
-      {
-        id: 'copilot-1',
-        name: 'Copilot',
-        prompt: 'Help',
-        avatar: { type: 'storage-key', storageKey: 'picture:missing' },
-        backgroundImage: { type: 'storage-key', storageKey: 'picture:kept' },
-      },
-    ]
     source.values.set(BackupStorageKey.Settings, sourceSettings)
-    source.values.set(BackupStorageKey.MyCopilots, copilots)
     source.values.set(BackupStorageKey.ChatSessionSettings, { model: 'model-a' })
     source.values.set(BackupStorageKey.PictureSessionSettings, { model: 'model-b' })
     source.blobs.set('picture:kept', 'data:image/png;base64,AAECAw==')
     const chunks: Uint8Array[] = []
 
     const exported = await exportBackupArchive({
-      exportItems: ['setting', 'conversations', 'copilot'],
+      exportItems: ['setting', 'conversations'],
       includeKeys: false,
       storage: source,
       metaStorage: new MemoryMetaStorage(),
@@ -249,14 +239,6 @@ describe('ZIP backup round trip', () => {
       defaultAssistantAvatarKey: 'picture:kept',
       providers: { custom: { apiHost: 'https://example.com' } },
     })
-    expect(destination.values.get(BackupStorageKey.MyCopilots)).toEqual([
-      {
-        id: 'copilot-1',
-        name: 'Copilot',
-        prompt: 'Help',
-        backgroundImage: { type: 'storage-key', storageKey: 'picture:kept' },
-      },
-    ])
     expect(destination.values.get(BackupStorageKey.ChatSessionSettings)).toEqual({ model: 'model-a' })
     expect(destination.values.get(BackupStorageKey.PictureSessionSettings)).toEqual({ model: 'model-b' })
     expect(destination.blobs.get('picture:kept')).toBe('data:image/png;base64,AAECAw==')

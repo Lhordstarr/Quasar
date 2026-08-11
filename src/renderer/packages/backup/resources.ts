@@ -1,5 +1,5 @@
 import { isTextFilePath } from '@shared/file-extensions'
-import type { CopilotDetail, Message, MessageFile, Session, SessionMetaRecord, Settings } from '@shared/types'
+import type { Message, MessageFile, Session, SessionMetaRecord, Settings } from '@shared/types'
 import type { BackupResourceEntry, BackupWarning } from './types'
 
 export interface ResourceReference {
@@ -59,7 +59,7 @@ function collectMessageReferences(
         code: 'external-resource-skipped',
         itemType: 'resource',
         itemId: file.name,
-        message: `External file was not included because it is not managed by Chatbox: ${file.name}`,
+        message: `External file was not included because it is not managed by Quasar: ${file.name}`,
       })
     }
   }
@@ -120,7 +120,7 @@ export function collectSessionResourceReferences(session: Session): {
   return { references, warnings }
 }
 
-export function collectGlobalResourceReferences(settings?: Partial<Settings>, copilots?: CopilotDetail[]) {
+export function collectGlobalResourceReferences(settings?: Partial<Settings>) {
   const references: ResourceReference[] = []
   for (const storageKey of [
     settings?.userAvatarKey,
@@ -128,13 +128,6 @@ export function collectGlobalResourceReferences(settings?: Partial<Settings>, co
     settings?.backgroundImageKey,
   ]) {
     addReference(references, storageKey ? { storageKey, kind: 'background' } : undefined)
-  }
-  for (const copilot of copilots ?? []) {
-    for (const source of [copilot.avatar, copilot.backgroundImage, ...(copilot.screenshots ?? [])]) {
-      if (source?.type === 'storage-key') {
-        addReference(references, { storageKey: source.storageKey, kind: 'copilot-image' })
-      }
-    }
   }
   return references
 }
@@ -260,30 +253,6 @@ export function restoreSettingsResourceKeys(
     else restored[key] = restoredStorageKey
   }
   return restored
-}
-
-function restoreImageSource<T extends CopilotDetail['avatar']>(
-  source: T,
-  resourceKeyMap: ReadonlyMap<string, string>
-): T | undefined {
-  if (source?.type !== 'storage-key') return source
-  const restoredStorageKey = restoreResourceKey(source.storageKey, resourceKeyMap)
-  return restoredStorageKey === undefined ? undefined : ({ ...source, storageKey: restoredStorageKey } as T)
-}
-
-export function restoreCopilotResourceKeys(
-  copilots: CopilotDetail[],
-  resourceKeyMap: ReadonlyMap<string, string>
-): CopilotDetail[] {
-  return copilots.map((copilot) => ({
-    ...copilot,
-    avatar: restoreImageSource(copilot.avatar, resourceKeyMap),
-    backgroundImage: restoreImageSource(copilot.backgroundImage, resourceKeyMap),
-    screenshots: copilot.screenshots?.flatMap((source) => {
-      const restored = restoreImageSource(source, resourceKeyMap)
-      return restored === undefined ? [] : [restored]
-    }),
-  }))
 }
 
 export function visitSessionFiles(session: Session, callback: (file: MessageFile, message: Message) => void) {

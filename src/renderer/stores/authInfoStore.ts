@@ -1,7 +1,11 @@
 import { createStore, useStore } from 'zustand'
 import { persist, subscribeWithSelector } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import type { AuthTokens } from '../routes/settings/provider/chatbox-ai/-components/types'
+
+export interface AuthTokens {
+  accessToken: string
+  refreshToken: string
+}
 
 interface AuthTokensState {
   accessToken: string | null
@@ -64,14 +68,4 @@ export const authInfoStore = createStore<AuthTokensState & AuthTokensActions>()(
 
 export function useAuthInfoStore<U>(selector: Parameters<typeof useStore<typeof authInfoStore, U>>[1]) {
   return useStore<typeof authInfoStore, U>(authInfoStore, selector)
-}
-
-export const useAuthTokens = () => {
-  return useAuthInfoStore((state) => ({
-    accessToken: state.accessToken,
-    refreshToken: state.refreshToken,
-    setTokens: state.setTokens,
-    clearTokens: state.clearTokens,
-    getTokens: state.getTokens,
-  }))
 }

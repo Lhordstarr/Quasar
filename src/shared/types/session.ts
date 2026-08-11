@@ -377,7 +377,6 @@ export const SessionSchema = z.object({
   starred: z.boolean().optional(),
   hidden: z.boolean().optional(), // Hidden from session list (e.g., migrated picture sessions)
   archivedAt: z.number().optional(),
-  copilotId: z.string().optional(),
   assistantAvatarKey: z.string().optional(),
   backgroundImage: ImageSourceSchema.optional(),
   settings: SessionSettingsSchema.optional(),

@@ -7,11 +7,9 @@ import { createMemoryHistory, createRootRoute, createRoute, createRouter, Router
 import { createContext, type ReactNode, useContext, useEffect, useState } from 'react'
 import {
   FreeTrialLink,
-  LoginButton,
   NewChatButton,
   NewChatTip,
   ProviderSettingsButton,
-  ViewLicenseButton,
 } from '@/routes/guide/-components/ActionButton'
 import { ClaimWaitingCard } from '@/routes/guide/-components/ClaimWaitingCard'
 import { GuideMessage } from '@/routes/guide/-components/GuideMessage'
@@ -60,7 +58,7 @@ const sampleLicense: UserLicense = {
 }
 
 export const GuideActionButtonsStates: StoryObj = {
-  name: 'Guide action login settings license free trial and new chat states',
+  name: 'Guide action settings license free trial and new chat states',
   parameters: {
     uiInventoryTargets: ['src/renderer/routes/guide/-components/ActionButton'],
   },
@@ -68,20 +66,14 @@ export const GuideActionButtonsStates: StoryObj = {
     <Stack gap="lg">
       <SurfaceLabel
         title="ActionButton"
-        description="Actual guide action components for login, provider settings, new chat, onboarding tip, license details, and free trial claim."
+        description="Actual guide action components for provider settings, new chat, onboarding tip, and free trial claim."
       />
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-        <ActionSurface label="Login">
-          <LoginButton onLoginSuccess={() => undefined} />
-        </ActionSurface>
         <ActionSurface label="Provider settings">
           <ProviderSettingsButton />
         </ActionSurface>
         <ActionSurface label="New chat">
           <NewChatButton label="Start a new chat" />
-        </ActionSurface>
-        <ActionSurface label="License">
-          <ViewLicenseButton />
         </ActionSurface>
         <ActionSurface label="Free trial">
           <FreeTrialLink onAfterClick={() => undefined} />
@@ -239,7 +231,6 @@ function GuideMessageFixture() {
             message={toolMessage}
             isLastMessage
             onSelectUserType={setSelectedType}
-            onLoginSuccess={() => undefined}
             onQuestionClick={setLastQuestion}
             onClaimStart={() => setClaimStarted(true)}
             onClaimDetected={() => undefined}
@@ -330,11 +321,9 @@ const toolMessage: GuideUIMessage = {
       type: 'text',
       text: 'Your account is ready. You can review the license, open provider settings, claim the free plan, or start a fresh chat.',
     },
-    toolPart('show_login_button', 'guide-login'),
     toolPart('show_provider_settings_button', 'guide-provider-settings'),
     toolPart('show_free_trial_link', 'guide-free-trial'),
     toolPart('show_claim_waiting', 'guide-claim-waiting'),
-    toolPart('show_view_license_button', 'guide-view-license'),
     toolPart('show_new_chat_button', 'guide-new-chat', { label: 'Start chatting now' }),
     toolPart('show_new_chat_tip', 'guide-new-chat-tip'),
   ],

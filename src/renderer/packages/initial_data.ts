@@ -82,7 +82,6 @@ export const defaultSessionsForEN: Session[] = [
       },
     ].map(migrateMessage),
     starred: false,
-    copilotId: 'chatbox-featured:24',
   },
   {
     id: '55d92e88-02af-4c3b-a378-aa0a1970abb1',
@@ -98,20 +97,19 @@ export const defaultSessionsForEN: Session[] = [
       },
       {
         id: 'e99f80e0-b5a4-4a4d-954e-9ad20c8465e7',
-        content: 'Tweet out to let everyone know: The latest version of Chatbox has been released',
+        content: 'Tweet out to let everyone know: The latest version of Quasar has been released',
         role: 'user' as const,
       },
       {
         id: 'eb6218ad-439d-4e15-847b-0382f844f96e',
         content:
-          '"Exciting news! The latest version of Chatbox has just been released. Get ready to experience amazing features and seamless AI conversations. Upgrade now and unleash your productivity potential! #Chatbox #MessagingApp #Upgrade"',
+          '"Exciting news! The latest version of Quasar has just been released. Get ready to experience amazing features and seamless AI conversations. Upgrade now and unleash your productivity potential! #Quasar #MessagingApp #Upgrade"',
         role: 'assistant' as const,
         model: 'unknown',
         generating: false,
       },
     ].map(migrateMessage),
     starred: false,
-    copilotId: 'chatbox-featured:33',
   },
   {
     id: '35df5a96-b612-406a-985b-3ab4d2c481ff',
@@ -140,7 +138,6 @@ export const defaultSessionsForEN: Session[] = [
       },
     ].map(migrateMessage),
     starred: true,
-    copilotId: 'chatbox-featured:35',
   },
   {
     id: '776eac23-7b4a-40da-91cd-f233bb4742ed',
@@ -204,7 +201,6 @@ export const defaultSessionsForEN: Session[] = [
       },
     ].map(migrateMessage),
     starred: false,
-    copilotId: 'chatbox-featured:56',
   },
 ]
 
@@ -222,20 +218,19 @@ export const defaultSessionsForCN: Session[] = [
       },
       {
         id: '49deeb2b-db25-462e-9886-ff94efca70d2',
-        content: 'Chatbox 最新版本发布啦',
+        content: 'Quasar 最新版本发布啦',
         role: 'user' as const,
       },
       {
         id: '014f9bf6-a164-4866-87d9-558db3acbef9',
         content:
-          '小仙女们，Chatbox 又双叒叕更新啦！这次版本新增了好多好多小细节哦，让我们快来看看吧~✨✨✨\n\n首先，Chatbox 在此次更新中为大家加入了许多优化体验！让聊天变得更加愉快、更加流畅。而且还有一些小搭档的出现，帮助你更高效地完成工作🔥🔥🔥\n\n此外，Chatbox 为大家特别准备了一个新的 AI 服务：Chatbox AI，可以直接使用哦，再也不用折腾 API KEY 和技术术语啦💗💗💗💗\n\n最后，记得分享和转发这篇笔记让更多小伙伴们一起使用，分享快乐哦😁😁😁😁\n\n快来下载最新版的 Chatbox，开启与小伙伴们的新生活吧！\n💬 #Chatbox新版本 #AI神器 #人生苦短我用Chatbox#',
+          '小仙女们，Quasar 又双叒叕更新啦！这次版本新增了好多好多小细节哦，让我们快来看看吧~✨✨✨\n\n首先，Quasar 在此次更新中为大家加入了许多优化体验！让聊天变得更加愉快、更加流畅。而且还有一些小搭档的出现，帮助你更高效地完成工作🔥🔥🔥\n\n此外，Quasar 为大家特别准备了一个新的 AI 服务：Chatbox AI，可以直接使用哦，再也不用折腾 API KEY 和技术术语啦💗💗💗💗\n\n最后，记得分享和转发这篇笔记让更多小伙伴们一起使用，分享快乐哦😁😁😁😁\n\n快来下载最新版的 Quasar，开启与小伙伴们的新生活吧！\n💬 #Quasar新版本 #AI神器 #人生苦短我用Quasar#',
         role: 'assistant' as const,
         model: 'unknown',
         generating: false,
       },
     ].map(migrateMessage),
     starred: false,
-    copilotId: 'chatbox-featured:7',
   },
   {
     id: '8732ec08-b23c-4b5e-8f65-d63d808f970f',
@@ -264,7 +259,6 @@ export const defaultSessionsForCN: Session[] = [
       },
     ].map(migrateMessage),
     starred: false,
-    copilotId: 'chatbox-featured:23',
   },
   {
     id: '3e091ac6-ebfa-42c9-b125-c67ac2d45ee1',
@@ -292,7 +286,6 @@ export const defaultSessionsForCN: Session[] = [
       },
     ].map(migrateMessage),
     starred: false,
-    copilotId: 'chatbox-featured:21',
   },
   ...defaultSessionsForEN,
 ]
@@ -311,7 +304,7 @@ export const imageCreatorSessionForCN: Session = {
     {
       id: 'chatbox-chat-demo-image-creator-message-id-1',
       role: 'system' as const,
-      content: `Hi！我是 Chatbox Image Creator，“无情”的图片制造机。我可以根据你的描述生成精美图片，只要你能想象得到，我就能创造出来——迷人的风景、生动的角色、App 图标、或者抽象的构思……
+      content: `Hi！我是 Quasar Image Creator，“无情”的图片制造机。我可以根据你的描述生成精美图片，只要你能想象得到，我就能创造出来——迷人的风景、生动的角色、App 图标、或者抽象的构思……
 
 (๑•́ ₃ •̀๑) 额…我是一个有点自闭的机器人，所以**请直接告诉我你想要图片的文字描述**，我会集中我所有的像素去实现你的想象。
 
@@ -424,7 +417,7 @@ export const imageCreatorSessionForEN: Session = {
     {
       id: 'chatbox-chat-demo-image-creator-message-id-1',
       role: 'system' as const,
-      content: `Hi! I'm Chatbox Image Creator, your artistic AI companion dedicated to converting your words into striking visuals. If you can dream it, I can create it—from enchanting landscapes, dynamic characters, app icons to the abstract and beyond.
+      content: `Hi! I'm Quasar Image Creator, your artistic AI companion dedicated to converting your words into striking visuals. If you can dream it, I can create it—from enchanting landscapes, dynamic characters, app icons to the abstract and beyond.
 
 I'm a quiet robot, just **simply tell me the description of the image you have in mind**, and I'll focus all my pixels into crafting your vision.
 

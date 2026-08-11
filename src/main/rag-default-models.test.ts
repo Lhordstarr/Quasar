@@ -28,7 +28,7 @@ function settingsWithFallbacks(overrides: Partial<Settings> = {}): Settings {
     },
     extension: {
       webSearch: {
-        provider: 'build-in',
+        provider: 'bing',
       },
     },
     mcp: {

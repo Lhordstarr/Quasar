@@ -1,5 +1,5 @@
 /**
- * Stable automation surface for Chatbox UI.
+ * Stable automation surface for Quasar UI.
  *
  * IDs describe user-facing semantics rather than component libraries, copy, or layout.
  * Dynamic domain identity belongs in adjacent data-* attributes (for example modelId),

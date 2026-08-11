@@ -6,7 +6,7 @@ import {
   type SpotlightActionGroupData,
   useSpotlight,
 } from '@mantine/spotlight'
-import { type BuiltinProviderBaseInfo, ModelProviderEnum } from '@shared/types'
+import type { BuiltinProviderBaseInfo } from '@shared/types'
 import { IconFileImport, IconSearch, IconSquareRoundedPlusFilled } from '@tabler/icons-react'
 import { type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -50,12 +50,8 @@ function useProviderPickerGroups({
   const { t } = useTranslation()
 
   return useMemo(() => {
-    const featured = allSystemProviders.filter(
-      (p) => FEATURED_PROVIDER_IDS.includes(p.id) && p.id !== ModelProviderEnum.ChatboxAI
-    )
-    const others = allSystemProviders.filter(
-      (p) => !FEATURED_PROVIDER_IDS.includes(p.id) && p.id !== ModelProviderEnum.ChatboxAI
-    )
+    const featured = allSystemProviders.filter((p) => FEATURED_PROVIDER_IDS.includes(p.id))
+    const others = allSystemProviders.filter((p) => !FEATURED_PROVIDER_IDS.includes(p.id))
 
     const quickActions: PickerAction[] = [
       {

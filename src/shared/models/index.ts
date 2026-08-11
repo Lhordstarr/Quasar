@@ -9,7 +9,7 @@ export const aiProviderNameHash: Record<ModelProviderEnum, string> = {
   [ModelProviderEnum.OpenAIResponses]: 'OpenAI Responses API',
   [ModelProviderEnum.Azure]: 'Azure OpenAI API',
   [ModelProviderEnum.ChatGLM6B]: 'ChatGLM API',
-  [ModelProviderEnum.ChatboxAI]: 'Chatbox AI',
+  [ModelProviderEnum.ChatboxAI]: 'Quasar',
   [ModelProviderEnum.Claude]: 'Claude API',
   [ModelProviderEnum.Gemini]: 'Google Gemini API',
   [ModelProviderEnum.Qwen]: 'Qwen API',
@@ -30,6 +30,9 @@ export const aiProviderNameHash: Record<ModelProviderEnum, string> = {
   [ModelProviderEnum.OpenRouter]: 'OpenRouter API',
   [ModelProviderEnum.Bedrock]: 'AWS Bedrock',
   [ModelProviderEnum.VercelAIGateway]: 'Vercel AI Gateway',
+  [ModelProviderEnum.Pollinations]: 'Pollinations AI',
+  [ModelProviderEnum.Together]: 'Together AI API',
+  [ModelProviderEnum.HuggingFace]: 'Hugging Face API',
   [ModelProviderEnum.Custom]: 'Custom Provider',
 }
 

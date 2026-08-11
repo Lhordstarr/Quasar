@@ -17,6 +17,15 @@ function manifest(imageModels: Array<{ modelId: string; modelName: string }>) {
   return { groupName: 'Images', models: [], imageModels }
 }
 
+// Pollinations is free and always offered, so it is part of every catalog result.
+const pollinationsModels = [
+  { provider: ModelProviderEnum.Pollinations, modelId: 'flux', nickname: 'Flux' },
+  { provider: ModelProviderEnum.Pollinations, modelId: 'flux-2', nickname: 'Flux 2' },
+  { provider: ModelProviderEnum.Pollinations, modelId: 'flux-schnell', nickname: 'Flux Schnell' },
+  { provider: ModelProviderEnum.Pollinations, modelId: 'flux-2-dev', nickname: 'Flux 2 Dev' },
+  { provider: ModelProviderEnum.Pollinations, modelId: 'zimage', nickname: 'Z-Image Turbo' },
+]
+
 function createSettings(): Settings {
   return defaultSettings()
 }
@@ -43,6 +52,7 @@ describe('image model catalog', () => {
     await expect(getAvailableImageModels(settings)).resolves.toEqual([
       { provider: ModelProviderEnum.ChatboxAI, modelId: 'other-image', nickname: 'Other Image' },
       { provider: ModelProviderEnum.ChatboxAI, modelId: 'gpt-image-1.5', nickname: 'GPT Image 1.5' },
+      ...pollinationsModels,
     ])
     expect(getModelManifestMock).toHaveBeenCalledWith({
       aiProvider: ModelProviderEnum.ChatboxAI,
@@ -87,13 +97,14 @@ describe('image model catalog', () => {
       { provider: 'custom-provider-gemini', modelId: 'custom-image', nickname: 'Custom Image' },
       { provider: ModelProviderEnum.OpenAI, modelId: 'openai-remote', nickname: 'Remote OpenAI' },
       { provider: ModelProviderEnum.OpenAI, modelId: 'openai-manual', nickname: 'Manual OpenAI' },
+      ...pollinationsModels,
     ])
   })
 
-  it('omits unconfigured providers', async () => {
+  it('omits unconfigured providers except free Pollinations', async () => {
     const settings = createSettings()
 
-    await expect(getAvailableImageModels(settings)).resolves.toEqual([])
+    await expect(getAvailableImageModels(settings)).resolves.toEqual(pollinationsModels)
     expect(getModelManifestMock).not.toHaveBeenCalled()
   })
 
@@ -109,6 +120,7 @@ describe('image model catalog', () => {
 
     await expect(getAvailableImageModels(settings)).resolves.toEqual([
       { provider: ModelProviderEnum.OpenAI, modelId: 'manual-only', nickname: 'Manual Only' },
+      ...pollinationsModels,
     ])
   })
 
@@ -123,7 +135,7 @@ describe('image model catalog', () => {
       },
     }
 
-    await expect(getAvailableImageModels(settings)).resolves.toEqual([])
+    await expect(getAvailableImageModels(settings)).resolves.toEqual(pollinationsModels)
     expect(getModelManifestMock).not.toHaveBeenCalled()
   })
 
@@ -140,6 +152,7 @@ describe('image model catalog', () => {
 
     await expect(getAvailableImageModels(settings)).resolves.toEqual([
       { provider: ModelProviderEnum.OpenAI, modelId: 'gpt-image-2', nickname: 'GPT Image 2' },
+      ...pollinationsModels,
     ])
   })
 })

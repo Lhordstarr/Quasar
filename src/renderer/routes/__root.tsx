@@ -284,8 +284,6 @@ function Root() {
       pageName = JK_PAGE_NAMES.CHAT_PAGE
     } else if (pathname.startsWith('/image-creator')) {
       pageName = JK_PAGE_NAMES.IMAGE_PAGE
-    } else if (pathname.startsWith('/copilots')) {
-      pageName = JK_PAGE_NAMES.COPILOTS_PAGE
     } else if (pathname.startsWith('/settings')) {
       pageName = JK_PAGE_NAMES.SETTING_PAGE
     } else if (pathname.startsWith('/guide')) {

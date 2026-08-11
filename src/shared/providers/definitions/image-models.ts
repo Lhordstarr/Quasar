@@ -6,6 +6,33 @@ const RATIO_OPTIONS: Record<ImageModelFamily | 'default', string[]> = {
   default: ['auto', '1:1', '3:2', '2:3'],
 }
 
+export interface ImageProviderModel {
+  modelId: string
+  nickname: string
+}
+
+// Free image generation via Pollinations (no API key required)
+export const POLLINATIONS_IMAGE_MODELS: ImageProviderModel[] = [
+  { modelId: 'flux', nickname: 'Flux' },
+  { modelId: 'flux-2', nickname: 'Flux 2' },
+  { modelId: 'flux-schnell', nickname: 'Flux Schnell' },
+  { modelId: 'flux-2-dev', nickname: 'Flux 2 Dev' },
+  { modelId: 'zimage', nickname: 'Z-Image Turbo' },
+]
+
+// Image models via Together AI (API key required)
+export const TOGETHER_IMAGE_MODELS: ImageProviderModel[] = [
+  { modelId: 'black-forest-labs/FLUX.1-schnell-Free', nickname: 'FLUX.1 Schnell' },
+  { modelId: 'black-forest-labs/FLUX.1-dev', nickname: 'FLUX.1 Dev' },
+  { modelId: 'stabilityai/stable-diffusion-xl-base-1.0', nickname: 'Stable Diffusion XL' },
+]
+
+// Image models via Hugging Face Inference API (API key required)
+export const HUGGING_FACE_IMAGE_MODELS: ImageProviderModel[] = [
+  { modelId: 'black-forest-labs/FLUX.1-schnell', nickname: 'FLUX.1 Schnell' },
+  { modelId: 'stabilityai/stable-diffusion-xl-base-1.0', nickname: 'Stable Diffusion XL' },
+]
+
 export function getImageModelFamily(modelId: string): ImageModelFamily | 'default' {
   if (modelId.includes('gemini') && modelId.includes('image')) return 'gemini'
   if (modelId.startsWith('gpt-image')) return 'openai'

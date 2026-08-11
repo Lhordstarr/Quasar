@@ -1040,7 +1040,7 @@ async function stopPausedToolCallWithoutSessionLock(sessionId: string, messageId
         ? { success: false, exitCode: null, stdout: '', stderr: 'Command denied by user.' }
         : pauseReason.type === 'file_mutation_approval'
           ? { success: false, error: 'File mutation denied by user.' }
-          : { success: false, error: 'Chatbox action denied by user.' }
+          : { success: false, error: 'Quasar action denied by user.' }
     // Denying one call intentionally denies its whole parallel batch: the model should see
     // one consistent refusal and react once, not a mix of denied and still-pending siblings.
     // Approving stays per-call (each approval is reviewed individually in continuePausedToolCall).

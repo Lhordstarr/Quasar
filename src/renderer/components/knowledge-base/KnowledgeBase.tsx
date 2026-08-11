@@ -3,7 +3,7 @@ import { SystemProviders } from '@shared/defaults'
 import type { KnowledgeBase, ProviderModelInfo } from '@shared/types'
 import type { DocumentParserConfig, DocumentParserType } from '@shared/types/settings'
 import { parseKnowledgeBaseModelString } from '@shared/utils/knowledge-base-model-parser'
-import { IconAlertTriangle, IconInfoCircle, IconLogin, IconPlus } from '@tabler/icons-react'
+import { IconAlertTriangle, IconInfoCircle, IconPlus } from '@tabler/icons-react'
 import compact from 'lodash/compact'
 import flatten from 'lodash/flatten'
 import type React from 'react'
@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { Modal } from '@/components/layout/Overlay'
 import { AppTooltip as Tooltip } from '@/components/ui/tooltip'
 import { useProviders } from '@/hooks/useProviders'
-import { navigateToSettings } from '@/modals/Settings'
 import * as remote from '@/packages/remote'
 import { toastError } from '@/packages/toast'
 import platform from '@/platform'
@@ -552,16 +551,6 @@ const KnowledgeBasePage: React.FC = () => {
                   'Your Chatbox AI knowledge base requires an active login. Please sign in to Chatbox AI to use this knowledge base.'
                 )}
               </Text>
-              <Group mt="sm">
-                <Button
-                  size="xs"
-                  variant="light"
-                  leftSection={<IconLogin size={14} />}
-                  onClick={() => navigateToSettings('chatbox-ai')}
-                >
-                  {t('Log in to Chatbox AI')}
-                </Button>
-              </Group>
             </Alert>
           )}
           {kbList.length === 0 ? (
@@ -616,7 +605,6 @@ const KnowledgeBasePage: React.FC = () => {
                                 ? String(t('Sign in to Chatbox AI to use this knowledge base'))
                                 : String(t('Provider unavailable'))
                             }
-                            onUnavailableClick={!isLoggedIn ? () => navigateToSettings('chatbox-ai') : undefined}
                           />
                         </>
                       ) : (

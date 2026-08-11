@@ -299,7 +299,7 @@ In long conversations, earlier tool call results may be automatically compressed
   if (webBrowsing && webSupported) {
     tools.web_search = webSearchTool
     // Inject parse_link based on the selected provider's declared capability.
-    // Validation (Pro for build-in, API key for third parties) happens at execution time.
+    // Validation (API key for third parties) happens at execution time.
     if (includeParseLinkTool) {
       tools.parse_link = parseLinkTool
     }

@@ -168,7 +168,7 @@ if (process.platform === 'linux') {
   log.info(`[Linux startup flags] disableGpu=${disableGpu}, disableDevShmUsage=${disableDevShmUsage}`)
 }
 
-// 这行代码是解决 Windows 通知的标题和图标不正确的问题，标题会错误显示成 electron.app.Chatbox
+// 这行代码是解决 Windows 通知的标题和图标不正确的问题，标题会错误显示成 electron.app.Quasar
 // 参考：https://stackoverflow.com/questions/65859634/notification-from-electron-shows-electron-app-electron
 if (process.platform === 'win32') {
   app.setAppUserModelId(app.name)
