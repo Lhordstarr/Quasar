@@ -23,7 +23,7 @@ const {
   const licenseActivation = { method: 'manual' as 'login' | 'manual' | undefined }
   const authTokens = { hasTokens: true }
   const sessionRagCapability = { enabled: true }
-  const parser = { type: 'local' as 'local' | 'chatbox-ai' | 'none' | 'mineru' }
+  const parser = { type: 'local' as 'local' | 'none' | 'mineru' }
   const defaultEmbeddingModel = {
     value: undefined as { provider: string; model: string } | undefined,
   }
@@ -425,8 +425,8 @@ describe('preprocessFile local parser fallback', () => {
     )
   })
 
-  it('uses local parsing first when Chatbox AI parser is selected', async () => {
-    parserState.type = 'chatbox-ai'
+  it('uses local parsing for non-text files by default', async () => {
+    parserState.type = 'local'
     const file = createFile('local-first.pdf')
     blobStore.set('local-key', 'local parsed content')
     mockParseFileLocally.mockResolvedValueOnce({ isSupported: true, key: 'local-key' })
@@ -440,9 +440,9 @@ describe('preprocessFile local parser fallback', () => {
     expect(result.parserType).toBe('local')
   })
 
-  it('falls back to Chatbox AI when Chatbox AI parser is selected and local parsing is unsupported', async () => {
-    parserState.type = 'chatbox-ai'
-    const file = createFile('cloud-fallback.docx')
+  it('falls back to cloud parsing for text files when local parsing is unsupported and a license exists', async () => {
+    parserState.type = 'local'
+    const file = createFile('cloud-fallback.md')
     blobStore.set('remote-key', 'remote parsed document')
     mockParseFileLocally.mockResolvedValueOnce({ isSupported: false })
     mockUploadAndCreateUserFile.mockResolvedValueOnce('remote-key')

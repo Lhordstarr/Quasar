@@ -27,7 +27,7 @@ export type UiInventoryItem = {
   hasTranslation: boolean
 }
 
-export const uiInventoryGeneratedAt = "2026-08-10T03:38:01.474Z"
+export const uiInventoryGeneratedAt = "2026-08-11T00:34:52.808Z"
 
 export const uiInventorySummary = {
   "total": 226,
@@ -3638,10 +3638,10 @@ export const uiInventoryItems: UiInventoryItem[] = [
         "iframeHref": "http://localhost:6006/iframe.html?id=real-components-input-surfaces--attachment-mini-card-image-file-processing-completed-error-states&viewMode=story"
       },
       {
-        "label": "Storybook: Attachment parser type label local chatbox-ai mineru inline and indexed",
+        "label": "Storybook: Attachment parser type label local mineru inline and indexed",
         "kind": "storybook",
-        "href": "http://localhost:6006/?path=/story/real-components-input-surfaces--attachment-parser-type-label-local-chatbox-ai-mineru-inline-and-indexed",
-        "iframeHref": "http://localhost:6006/iframe.html?id=real-components-input-surfaces--attachment-parser-type-label-local-chatbox-ai-mineru-inline-and-indexed&viewMode=story"
+        "href": "http://localhost:6006/?path=/story/real-components-input-surfaces--attachment-parser-type-label-local-mineru-inline-and-indexed",
+        "iframeHref": "http://localhost:6006/iframe.html?id=real-components-input-surfaces--attachment-parser-type-label-local-mineru-inline-and-indexed&viewMode=story"
       },
       {
         "label": "Storybook: Message attachment inline retrieval indexed indexing blocked failed states",
@@ -4159,22 +4159,16 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "KnowledgeBase"
     ],
     "states": [
-      "active",
-      "chatboxAIModels",
       "deleteConfirmKb",
       "disabled",
       "editKb",
       "editRerankModel",
       "editVisionModel",
       "error",
-      "hasError",
       "hasModel",
-      "isChatboxAIDisabled",
-      "isChatboxAIKnowledgeBase",
       "isConfirmDisabled",
       "isEmbedding",
       "isEmbeddingDisabled",
-      "isLoggedIn",
       "isProviderAvailable",
       "isUnsupportedPlatform",
       "isWin32Arm64",
@@ -4182,7 +4176,10 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "newDocumentParser",
       "newEmbeddingModel",
       "newKbName",
-      "newProviderMode"
+      "newRerankModel",
+      "newVisionModel",
+      "opened",
+      "showCreate"
     ],
     "variants": [
       "color:orange",
@@ -4215,14 +4212,11 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Edit Knowledge Base",
       "Embedding",
       "Failed to create knowledge base, Error: {{error}}",
-      "Failed to fetch Chatbox AI models config, Error: {{error}}",
       "Failed to fetch knowledge base list, Error: {{error}}",
       "Failed to update knowledge base, Error: {{error}}",
       "Knowledge Base",
       "Knowledge Base functionality is not available on Windows ARM64 due to library compatibility issues. This feature is supported on Windows x64, macOS, and Linux.",
       "Local",
-      "Log in to Chatbox AI",
-      "Models",
       "Name",
       "No Knowledge Base Yet",
       "None",
@@ -4231,12 +4225,9 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Provider unavailable",
       "Rerank",
       "Save",
-      "Sign in to Chatbox AI",
-      "Sign in to Chatbox AI to use this knowledge base",
       "This action cannot be undone. All documents and their embeddings will be permanently deleted.",
       "Unknown",
-      "Vision",
-      "Your Chatbox AI knowledge base requires an active login. Please sign in to Chatbox AI to use this knowledge base."
+      "Vision"
     ],
     "stories": [],
     "storyNames": [],
@@ -4324,7 +4315,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "{{count}} file(s) not supported: {{files}}. Supported formats: {{formats}}",
       "Add File",
       "And {{count}} more file(s).",
-      "Chatbox AI parse failed",
       "chunks",
       "Delete",
       "Documents",
@@ -4388,8 +4378,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "connectionResult",
       "disabled",
       "error",
-      "hasError",
-      "isChatboxAIDisabled",
       "isConfirmDisabled",
       "isEmbeddingDisabled",
       "loading",
@@ -4402,7 +4390,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "color:red",
       "default",
       "outline",
-      "size:sm",
       "size:xs"
     ],
     "platforms": [
@@ -4412,21 +4399,14 @@ export const uiInventoryItems: UiInventoryItem[] = [
     "previewModes": [],
     "text": [
       "Cancel",
-      "Chatbox AI",
-      "Chatbox AI provides all the essential model support required for knowledge base processing. Consumes compute points.",
-      "Cloud-based document parsing service, supports PDF, Office files, EPUB and many other file types. Consumes compute points.",
       "Connected",
       "Connection failed",
       "Connection successful",
-      "Custom",
       "Delete",
       "Document Parser",
       "Embedding Model",
       "Enter your MinerU API token",
       "Failed",
-      "Failed to load Chatbox AI models configuration",
-      "Model Provider",
-      "Models",
       "New knowledge base name",
       "Parser used to process uploaded documents",
       "Please enter an API token",
@@ -5848,21 +5828,14 @@ export const uiInventoryItems: UiInventoryItem[] = [
     "states": [
       "active",
       "collapsed",
-      "isAdvanced",
-      "isChatboxAIAdvancedGroup",
-      "isChatboxAIModelLocked",
       "isFavorited",
-      "isFeaturedOnly",
-      "isLocked",
       "isMobile",
       "selected",
       "visible"
     ],
     "variants": [
       "chatbox",
-      "size:sm",
-      "size:xs",
-      "transparent"
+      "size:sm"
     ],
     "platforms": [
       "mobile"
@@ -5872,17 +5845,13 @@ export const uiInventoryItems: UiInventoryItem[] = [
     ],
     "previewModes": [],
     "text": [
-      "Collapse",
-      "Unavailable",
-      "Upgrade to Pro",
-      "View all advanced models"
+      "Unavailable"
     ],
     "stories": [],
     "storyNames": [],
     "storyTargets": [],
     "storybookIds": [],
     "dependencies": [
-      "src/renderer/components/common/ScalableIcon",
       "src/renderer/components/ModelSelectorV2/chatboxCatalog",
       "src/renderer/components/ModelSelectorV2/constants",
       "src/renderer/components/ModelSelectorV2/helpers",
@@ -5928,7 +5897,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
     "platformNotes": [],
     "previewModes": [],
     "text": [
-      "Available on Pro and above",
       "Capabilities",
       "Close",
       "Compute point exchange",
@@ -5938,8 +5906,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Otherwise",
       "Output",
       "Pricing",
-      "Tiered pricing",
-      "Upgrade to Pro"
+      "Tiered pricing"
     ],
     "stories": [],
     "storyNames": [],
@@ -6011,9 +5978,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
     ],
     "states": [
       "activeTab",
-      "advancedExpanded",
-      "collapsed",
-      "collapsedGroupIds",
       "desktopDetail",
       "hasRightSideSpace",
       "isCustom",
@@ -6046,7 +6010,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
     "text": [
       "All",
       "Auto",
-      "Chatbox AI",
       "Favorite",
       "Model details",
       "No eligible models available",
@@ -6062,7 +6025,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "src/renderer/components/common/ScalableIcon",
       "src/renderer/components/ModelSelector/filterModels",
       "src/renderer/components/ModelSelectorV2/chatboxCatalog",
-      "src/renderer/components/ModelSelectorV2/ChatboxProviderRows",
       "src/renderer/components/ModelSelectorV2/constants",
       "src/renderer/components/ModelSelectorV2/DetailCard",
       "src/renderer/components/ModelSelectorV2/GenericProviderRows",
@@ -8808,9 +8770,8 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "AgentModeButton",
       "AgentModePanel",
       "Attachment mini card image file processing completed error states",
-      "Attachment parser type label local chatbox-ai mineru inline and indexed",
+      "Attachment parser type label local mineru inline and indexed",
       "Auto with popover",
-      "Chatbox AI parsed",
       "Document parser label",
       "Failed transcript",
       "Generating response",
@@ -8823,6 +8784,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Knowledge base report",
       "Local filesystem",
       "Local parsed",
+      "Local parsed reference",
       "Message attachment inline retrieval indexed indexing blocked failed states",
       "MessageAttachment",
       "MinerU parsed",
@@ -8833,7 +8795,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Quarterly deck",
       "Reference URL",
       "Scanned contract",
-      "Shows which parser produced each attachment (Local / Chatbox AI / MinerU). Inline attachments show the parser in the subtitle; session-retrieval (indexed) attachments hide it to make room for index status — the full parser + index info is shown in the click preview window instead.",
+      "Shows which parser produced each attachment (Local / MinerU). Inline attachments show the parser in the subtitle; session-retrieval (indexed) attachments hide it to make room for index status — the full parser + index info is shown in the click preview window instead.",
       "Unsupported model",
       "Upload preview card (FileMiniCard) — parser shown on completed"
     ],
@@ -8849,7 +8811,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Agent mode button auto on off unsupported popover states",
       "Agent mode panel auto on off unsupported and extension states",
       "Attachment mini card image file processing completed error states",
-      "Attachment parser type label local chatbox-ai mineru inline and indexed",
+      "Attachment parser type label local mineru inline and indexed",
       "InputBox composer ready selected model generating and missing model states",
       "Message attachment inline retrieval indexed indexing blocked failed states"
     ],
@@ -8878,7 +8840,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "real-components-input-surfaces--agent-mode-button-auto-on-off-unsupported-popover-states",
       "real-components-input-surfaces--agent-mode-panel-auto-on-off-unsupported-and-extension-states",
       "real-components-input-surfaces--attachment-mini-card-image-file-processing-completed-error-states",
-      "real-components-input-surfaces--attachment-parser-type-label-local-chatbox-ai-mineru-inline-and-indexed",
+      "real-components-input-surfaces--attachment-parser-type-label-local-mineru-inline-and-indexed",
       "real-components-input-surfaces--input-box-composer-ready-selected-model-generating-and-missing-model-states",
       "real-components-input-surfaces--message-attachment-inline-retrieval-indexed-indexing-blocked-failed-states"
     ],
@@ -8908,10 +8870,10 @@ export const uiInventoryItems: UiInventoryItem[] = [
         "iframeHref": "http://localhost:6006/iframe.html?id=real-components-input-surfaces--attachment-mini-card-image-file-processing-completed-error-states&viewMode=story"
       },
       {
-        "label": "Storybook: Attachment parser type label local chatbox-ai mineru inline and indexed",
+        "label": "Storybook: Attachment parser type label local mineru inline and indexed",
         "kind": "storybook",
-        "href": "http://localhost:6006/?path=/story/real-components-input-surfaces--attachment-parser-type-label-local-chatbox-ai-mineru-inline-and-indexed",
-        "iframeHref": "http://localhost:6006/iframe.html?id=real-components-input-surfaces--attachment-parser-type-label-local-chatbox-ai-mineru-inline-and-indexed&viewMode=story"
+        "href": "http://localhost:6006/?path=/story/real-components-input-surfaces--attachment-parser-type-label-local-mineru-inline-and-indexed",
+        "iframeHref": "http://localhost:6006/iframe.html?id=real-components-input-surfaces--attachment-parser-type-label-local-mineru-inline-and-indexed&viewMode=story"
       },
       {
         "label": "Storybook: InputBox composer ready selected model generating and missing model states",
@@ -8951,7 +8913,6 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "name",
       "opened",
       "parserConfig",
-      "providerMode",
       "rerankModel",
       "selected",
       "success",
@@ -8970,10 +8931,9 @@ export const uiInventoryItems: UiInventoryItem[] = [
     "text": [
       "Actual composer knowledge base selector menu with selected state and settings/create entry points.",
       "Actual documents section with upload affordance, completed file, processing progress, paused file, local parse failure, server parse failure, retry, pause, resume, delete, and chunks preview entry points.",
-      "Actual form controls used for create/edit knowledge base flows, including provider mode, parser selection, model selectors, read-only parser display, Chatbox AI info, and destructive edit actions.",
+      "Actual form controls used for create/edit knowledge base flows, including parser selection, model selectors, read-only parser display, and destructive edit actions.",
       "Actual knowledge base modals for inspecting parsed chunks and retrying local parser failures with server parsing.",
       "Actual knowledge base settings page with configured bases, provider pills, parser pills, edit actions, and embedded document lists.",
-      "Chatbox AI support handbook",
       "ChunksPreviewModal and RemoteRetryModal",
       "Empty knowledge base",
       "Empty onboarding docs",
@@ -8984,6 +8944,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Knowledge base form provider parser model and action states",
       "Knowledge base menu selected and create states",
       "Knowledge base page list documents and provider states",
+      "Knowledge base support handbook",
       "Knowledge Base: Product launch",
       "KnowledgeBase",
       "KnowledgeBaseDocuments",
@@ -10215,11 +10176,10 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Actual skills marketplace spotlight with popular skills, installed badges, replacement badges, and search input.",
       "Add provider modal name and API mode states",
       "AddProviderModal",
-      "Answer questions about Chatbox product features and plans.",
+      "Answer questions about Quasar product features and plans.",
       "Builtin MCP server premium accessible states",
       "BuiltinServersSection",
       "Chatbox AI",
-      "chatbox-product-info",
       "Claude",
       "claude-imported-workflow",
       "ConfigModal",
@@ -10248,6 +10208,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "ProviderIconImage",
       "ProviderList",
       "ProviderSpotlight",
+      "quasar-product-info",
       "release-notes",
       "repo-code-review",
       "Review changed files and produce concrete risk findings.",
@@ -14534,15 +14495,13 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "API key invalid!",
       "Bing Search is provided for free use, but it may have limitations and is subject to change by Microsoft.",
       "BoCha API Key",
-      "Chatbox Search is a paid feature with advanced capabilities and better performance.",
       "Check",
       "Connection successful!",
+      "DuckDuckGo is provided for free use, but it may have limitations and is subject to change.",
       "Enter your Querit API Key",
-      "for free now!",
       "Get API Key",
       "Max Results",
       "Maximum number of results to return.",
-      "Note: If you have never had a license before, you can claim it after logging in on the official website. Quota refreshed daily.",
       "Provided tools",
       "Querit API Key",
       "Querit Search Options",
@@ -14551,9 +14510,7 @@ export const uiInventoryItems: UiInventoryItem[] = [
       "Tavily API Key",
       "Time Range",
       "Time range of the search. For example, the last month.",
-      "try Chatbox AI",
-      "Web Search",
-      "You can"
+      "Web Search"
     ],
     "stories": [],
     "storyNames": [],

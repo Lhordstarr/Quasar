@@ -128,9 +128,9 @@ const detectedSkills: DetectedSkill[] = [
 
 const installedSkills: SkillInfo[] = [
   {
-    name: 'chatbox-product-info',
-    description: 'Answer questions about Chatbox product features and plans.',
-    path: '/builtin/chatbox-product-info/SKILL.md',
+    name: 'quasar-product-info',
+    description: 'Answer questions about Quasar product features and plans.',
+    path: '/builtin/quasar-product-info/SKILL.md',
     isBuiltin: true,
     source: { type: 'builtin' },
   },
@@ -467,7 +467,7 @@ function SeedSettingsManagement() {
       servers: [httpMcpServer, stdioMcpServer],
     },
     skills: {
-      enabledSkillNames: ['chatbox-product-info', 'repo-code-review', 'claude-imported-workflow'],
+      enabledSkillNames: ['quasar-product-info', 'repo-code-review', 'claude-imported-workflow'],
       translationEnabled: false,
       builtinDefaultsInitialized: true,
     },

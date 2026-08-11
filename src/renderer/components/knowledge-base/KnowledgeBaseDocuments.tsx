@@ -119,7 +119,7 @@ const KnowledgeBaseDocuments: React.FC<KnowledgeBaseDocumentsProps> = ({ knowled
   const failedFiles = useMemo(() => allFiles.filter((file) => file.status === 'failed'), [allFiles])
 
   // Parser types that should NOT show the "use Chatbox AI" suggestion when they fail
-  const PARSER_NO_SUGGESTION_LIST: string[] = ['mineru', 'chatbox-ai']
+  const PARSER_NO_SUGGESTION_LIST: string[] = ['mineru']
 
   // Check if we should show the Chatbox AI suggestion for failed files
   // Show suggestion only if there are failed files that are NOT in the exception list
@@ -610,8 +610,6 @@ const KnowledgeBaseDocuments: React.FC<KnowledgeBaseDocumentsProps> = ({ knowled
           switch (parserType) {
             case 'mineru':
               return t('MinerU parse failed')
-            case 'chatbox-ai':
-              return t('Chatbox AI parse failed')
             default:
               return t('Local parse failed')
           }
@@ -621,7 +619,7 @@ const KnowledgeBaseDocuments: React.FC<KnowledgeBaseDocumentsProps> = ({ knowled
               limit: KNOWLEDGE_BASE_MAX_PARSED_CONTENT_SIZE_LABEL,
             })
           : error || t('Processing failed')
-        const isRemoteParser = parserType === 'mineru' || parserType === 'chatbox-ai'
+        const isRemoteParser = parserType === 'mineru'
         return (
           <Flex gap={4} align="center">
             <Tooltip label={errorLabel} multiline w={300} withArrow position="top">
@@ -936,11 +934,7 @@ const KnowledgeBaseDocuments: React.FC<KnowledgeBaseDocumentsProps> = ({ knowled
                                     </Text>
                                     {doc.parser_type && (
                                       <Pill size="xs" c="dimmed">
-                                        {doc.parser_type === 'chatbox-ai'
-                                          ? 'Chatbox AI'
-                                          : doc.parser_type === 'mineru'
-                                            ? 'MinerU'
-                                            : 'Local'}
+                                        {doc.parser_type === 'mineru' ? 'MinerU' : 'Local'}
                                       </Pill>
                                     )}
                                   </>

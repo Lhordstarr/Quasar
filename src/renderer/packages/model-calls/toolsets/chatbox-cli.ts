@@ -7,9 +7,9 @@ export function buildChatboxCliToolSet(options: ChatboxCliOptions = {}) {
 
   const chatbox_cli: ToolSet[string] = {
     description:
-      'Run a controlled virtual Chatbox CLI command (not a shell). Supports account, read-only settings, ' +
+      'Run a controlled virtual CLI command (not a shell). Supports account, read-only settings, ' +
       'conversation history, and asynchronous image-generation background tasks. Image generation requires a ' +
-      'localized approval; after an accepted result, end the turn and wait for Chatbox callback instead of polling. ' +
+      'localized approval; after an accepted result, end the turn and wait for the callback instead of polling. ' +
       'Prefer argv for deterministic argument handling.',
     inputSchema: jsonSchema({
       type: 'object',

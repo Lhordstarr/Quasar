@@ -2,7 +2,7 @@
 
 > Last updated: 2026-07
 
-The built-in `chatbox-product-info` skill can use `chatbox_cli`, a controlled in-app command surface. It is not a system shell and does not execute arbitrary programs.
+The built-in `quasar-product-info` skill can use `chatbox_cli`, a controlled in-app command surface. It is not a system shell and does not execute arbitrary programs.
 
 ## Layers
 

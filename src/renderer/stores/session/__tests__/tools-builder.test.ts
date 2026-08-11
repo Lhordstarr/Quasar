@@ -237,7 +237,7 @@ beforeEach(() => {
   installFromSandboxMock.mockResolvedValue({ success: true, skillName: 'new-skill' })
   discoverSkillsMock.mockResolvedValue([
     { name: 'test-skill', description: 'A test skill' },
-    { name: 'chatbox-product-info', description: 'Chatbox product info' },
+    { name: 'quasar-product-info', description: 'Quasar product info' },
     { name: 'disabled-skill', description: 'Disabled' },
   ])
   loadSkillMock.mockResolvedValue({
@@ -780,7 +780,7 @@ describe('chatbox_cli tool', () => {
   test('uses an OpenAI-compatible top-level function schema', async () => {
     const model = createMockModel()
     getSettingsMock.mockReturnValue({
-      skills: { enabledSkillNames: ['chatbox-product-info'] },
+      skills: { enabledSkillNames: ['quasar-product-info'] },
     })
 
     const result = await buildToolsForSession(model, {
@@ -805,7 +805,7 @@ describe('chatbox_cli tool', () => {
     expect(inputSchema.jsonSchema).not.toHaveProperty('allOf')
   })
 
-  test('is available only when chatbox-product-info is enabled', async () => {
+  test('is available only when quasar-product-info is enabled', async () => {
     const model = createMockModel()
     const options: BuildToolsOptions = {
       webBrowsing: false,
@@ -814,7 +814,7 @@ describe('chatbox_cli tool', () => {
     }
 
     getSettingsMock.mockReturnValueOnce({
-      skills: { enabledSkillNames: ['chatbox-product-info'] },
+      skills: { enabledSkillNames: ['quasar-product-info'] },
     })
     const enabled = await buildToolsForSession(model, options)
     expect(enabled.tools.chatbox_cli).toBeDefined()
@@ -834,7 +834,7 @@ describe('chatbox_cli tool', () => {
     settingsState.licensePlanName = 'Chatbox AI Pro'
 
     getSettingsMock.mockReturnValue({
-      skills: { enabledSkillNames: ['chatbox-product-info'] },
+      skills: { enabledSkillNames: ['quasar-product-info'] },
     })
 
     const result = await buildToolsForSession(model, {
@@ -860,7 +860,7 @@ describe('chatbox_cli tool', () => {
   test('advertises the structured command hierarchy through capabilities', async () => {
     const model = createMockModel()
     getSettingsMock.mockReturnValue({
-      skills: { enabledSkillNames: ['chatbox-product-info'] },
+      skills: { enabledSkillNames: ['quasar-product-info'] },
     })
 
     const result = await buildToolsForSession(model, {

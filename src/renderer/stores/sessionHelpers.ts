@@ -398,13 +398,10 @@ async function fallbackToChatboxAIParser(
 
 type LocalParserFallbackOptions = {
   allowChatboxAIFallback?: boolean
-  forceChatboxAIFallback?: boolean
 }
 
 function shouldFallbackToChatboxAI(options: LocalParserFallbackOptions): boolean {
-  return (
-    Boolean(options.forceChatboxAIFallback) || (options.allowChatboxAIFallback !== false && canFallbackToChatboxAI())
-  )
+  return options.allowChatboxAIFallback !== false && canFallbackToChatboxAI()
 }
 
 async function parseFileWithLocalFallback(
@@ -643,11 +640,6 @@ export async function prepareFileAttachment(
 
         case 'local': {
           result = await parseFileWithLocalFallback(file, uniqKey)
-          break
-        }
-
-        case 'chatbox-ai': {
-          result = await parseFileWithLocalFallback(file, uniqKey, { forceChatboxAIFallback: true })
           break
         }
 

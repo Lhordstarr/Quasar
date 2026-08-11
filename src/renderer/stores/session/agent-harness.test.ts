@@ -388,10 +388,10 @@ describe('prepareAgentGenerationHarness', () => {
 
   test('disables chatbox_cli while a resumed image task waits for its callback', async () => {
     discoverSkillsMock.mockResolvedValue([
-      { name: 'chatbox-product-info', description: 'Operate Chatbox product features' },
+      { name: 'quasar-product-info', description: 'Operate Quasar product features' },
     ])
     getSettingsMock.mockReturnValue({
-      skills: { enabledSkillNames: ['chatbox-product-info'] },
+      skills: { enabledSkillNames: ['quasar-product-info'] },
     })
     const messages: Message[] = [
       {

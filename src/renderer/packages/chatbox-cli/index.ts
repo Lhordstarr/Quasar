@@ -135,13 +135,13 @@ export async function executeChatboxCli(
 
 export function getChatboxCliDescription(): string {
   return `
-### Chatbox Virtual CLI
-Use \`chatbox_cli\` for Chatbox account status, read-only settings, conversation history, and image generation.
+### Quasar Virtual CLI
+Use \`chatbox_cli\` for Quasar account status, read-only settings, conversation history, and image generation.
 Prefer structured \`argv\` input. This is a controlled app tool, not a real shell.
 - Read history without approval: \`["chats", "list"]\`, \`["chats", "search", "query"]\`, \`["chats", "read", "<id>"]\`.
-- Read safe settings: \`["settings", "list"]\`, \`["settings", "get", "appearance.theme"]\`. Settings cannot be changed through this tool; guide the user to the returned Chatbox Settings location to change them manually.
-- Start background image work: \`["image", "generate", "--prompt", "..."]\`. Chatbox shows a localized approval card before submitting the potentially billable request.
-- After an accepted image task, end the turn and wait for Chatbox's automated callback. Never poll \`image status\`; use it only after a callback, on explicit user request, or for recovery diagnostics.
+- Read safe settings: \`["settings", "list"]\`, \`["settings", "get", "appearance.theme"]\`. Settings cannot be changed through this tool; guide the user to the returned Quasar Settings location to change them manually.
+- Start background image work: \`["image", "generate", "--prompt", "..."]\`. Quasar shows a localized approval card before submitting the potentially billable request.
+- After an accepted image task, end the turn and wait for Quasar's automated callback. Never poll \`image status\`; use it only after a callback, on explicit user request, or for recovery diagnostics.
 - \`image history\` reads the device-wide Image Creator history, not only the current conversation.
 Background completion arrives as an automated user-role message that explicitly states no human input or approval occurred.
 `

@@ -1,7 +1,7 @@
 import type { SkillMetadata } from '../../../shared/types/skills'
 
 export const metadata: SkillMetadata = {
-  name: 'chatbox-product-info',
+  name: 'quasar-product-info',
   description:
     'Quasar product specialist and app operator. Use for product documentation and pricing, account and quota status, read-only settings, conversation history, image generation, authentication, developer docs, or MCP access.',
 }
@@ -9,14 +9,13 @@ export const metadata: SkillMetadata = {
 export const body = `
 # Quasar Product Information
 
-Use this skill when the user asks about Chatbox AI product capabilities, subscriptions, paid plans, license management, billing, authentication, developer APIs, MCP access, local Quasar settings, conversation history, or image generation.
+Use this skill when the user asks about Quasar product capabilities, subscriptions, paid plans, license management, billing, authentication, developer APIs, MCP access, local Quasar settings, conversation history, or image generation.
 
 ## Source of truth
 
-- Start from https://chatboxai.app/llms.txt for current machine-readable discovery links.
-- For pricing, subscriptions, paid plans, usage limits, or billing, follow the "Machine-readable pricing" link from llms.txt, currently https://chatboxai.app/pricing.md.
-- For product guides, follow the guide link from llms.txt.
-- For developer, authentication, API, MCP, or integration questions, follow the relevant docs links from llms.txt.
+- For pricing, subscriptions, paid plans, usage limits, or billing, follow the official Quasar product pages linked from the app's About/Help sections.
+- For product guides, refer to the in-app Guide and Help Center sections.
+- For developer, authentication, API, MCP, or integration questions, refer to the in-app developer documentation.
 
 ## Virtual CLI
 

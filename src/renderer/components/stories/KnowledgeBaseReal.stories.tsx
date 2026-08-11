@@ -14,11 +14,9 @@ import KnowledgeBaseDocuments from '../knowledge-base/KnowledgeBaseDocuments'
 import {
   DocumentParserDisplay,
   DocumentParserSelector,
-  KnowledgeBaseChatboxAIInfo,
   KnowledgeBaseFormActions,
   KnowledgeBaseModelSelectors,
   KnowledgeBaseNameInput,
-  KnowledgeBaseProviderModeSelect,
 } from '../knowledge-base/KnowledgeBaseForm'
 import KnowledgeBaseMenu from '../knowledge-base/KnowledgeBaseMenu'
 import { RemoteRetryModal } from '../knowledge-base/RemoteRetryModal'
@@ -65,12 +63,12 @@ const knowledgeBases: KnowledgeBase[] = [
   },
   {
     id: 102,
-    name: 'Chatbox AI support handbook',
-    embeddingModel: 'chatbox-ai:embedding',
-    rerankModel: 'chatbox-ai:rerank',
-    visionModel: 'chatbox-ai:vision',
-    providerMode: 'chatbox-ai',
-    documentParser: { type: 'chatbox-ai' },
+    name: 'Knowledge base support handbook',
+    embeddingModel: 'cohere:embed-english-v3.0',
+    rerankModel: 'cohere:rerank-v3.5',
+    visionModel: `${ModelProviderEnum.OpenAI}:gpt-4.1`,
+    providerMode: 'custom',
+    documentParser: { type: 'local' },
     createdAt: Date.now() - 1000 * 60 * 60 * 48,
   },
 ]
@@ -149,7 +147,7 @@ const knowledgeBaseFiles: KnowledgeBaseFile[] = [
     error: 'Parsed document content is too large',
     createdAt: Date.now() - 1000 * 60 * 8,
     parsed_remotely: 1,
-    parser_type: 'chatbox-ai',
+    parser_type: 'mineru',
   },
 ]
 
@@ -290,7 +288,6 @@ export const KnowledgeBaseModalStates: StoryObj = {
 }
 
 function KnowledgeBaseFormFixture() {
-  const [providerMode, setProviderMode] = useState<'chatbox-ai' | 'custom'>('custom')
   const [name, setName] = useState('Product launch knowledge base')
   const [parserConfig, setParserConfig] = useState({ type: 'mineru' as const, mineru: { apiToken: 'mineru-token' } })
   const [embeddingModel, setEmbeddingModel] = useState(`${ModelProviderEnum.OpenAI}:text-embedding-3-large`)
@@ -307,13 +304,11 @@ function KnowledgeBaseFormFixture() {
     <Stack gap="lg">
       <SurfaceLabel
         title="KnowledgeBaseForm"
-        description="Actual form controls used for create/edit knowledge base flows, including provider mode, parser selection, model selectors, read-only parser display, Chatbox AI info, and destructive edit actions."
+        description="Actual form controls used for create/edit knowledge base flows, including parser selection, model selectors, read-only parser display, and destructive edit actions."
       />
       <Paper withBorder radius="md" p="md" maw={640}>
         <Stack gap="md">
           <KnowledgeBaseNameInput value={name} onChange={setName} label="Name" />
-          <KnowledgeBaseProviderModeSelect value={providerMode} onChange={setProviderMode} />
-          <KnowledgeBaseChatboxAIInfo showModelsLabel />
           <DocumentParserSelector parserConfig={parserConfig} onParserConfigChange={setParserConfig} />
           <KnowledgeBaseModelSelectors
             embeddingModelList={embeddingModels}
@@ -326,7 +321,7 @@ function KnowledgeBaseFormFixture() {
             onRerankModelChange={setRerankModel}
             onVisionModelChange={setVisionModel}
           />
-          <DocumentParserDisplay parserType="chatbox-ai" />
+          <DocumentParserDisplay parserType="local" />
           <KnowledgeBaseFormActions
             onCancel={() => undefined}
             onConfirm={() => undefined}

@@ -206,7 +206,7 @@ export const SkillsSection: FC = () => {
       const currentSkillSettings = settingsStore.getState().skills
       const appliedDefaultBuiltinSkillNames =
         currentSkillSettings.appliedDefaultBuiltinSkillNames ??
-        (currentSkillSettings.builtinDefaultsInitialized ? ['chatbox-product-info'] : [])
+        (currentSkillSettings.builtinDefaultsInitialized ? ['quasar-product-info'] : [])
       const newlyAddedDefaultSkillNames = defaultEnabledBuiltinSkillNames.filter(
         (name) => !appliedDefaultBuiltinSkillNames.includes(name)
       )
@@ -232,7 +232,7 @@ export const SkillsSection: FC = () => {
       settingsStore.setState((state) => {
         const appliedDefaultBuiltinSkillNames =
           state.skills.appliedDefaultBuiltinSkillNames ??
-          (state.skills.builtinDefaultsInitialized ? ['chatbox-product-info'] : [])
+          (state.skills.builtinDefaultsInitialized ? ['quasar-product-info'] : [])
         const newlyAddedDefaultSkillNames = defaultEnabledBuiltinSkillNames.filter(
           (name) => !appliedDefaultBuiltinSkillNames.includes(name)
         )

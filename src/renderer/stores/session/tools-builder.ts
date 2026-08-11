@@ -344,7 +344,7 @@ In long conversations, earlier tool call results may be automatically compressed
       userExecWorkingDirectory
     )
     tools.load_skill = buildLoadSkillTool(options)
-    if (enabledSkills.some((skill) => skill.name === 'chatbox-product-info')) {
+    if (enabledSkills.some((skill) => skill.name === 'quasar-product-info')) {
       const chatboxCliToolSet = buildChatboxCliToolSet({
         sessionId: options.sessionId,
         onUsed: options.onAgentModeActivated,

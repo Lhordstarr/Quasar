@@ -36,7 +36,7 @@ function settingsWithFallbacks(overrides: Partial<Settings> = {}): Settings {
       enabledBuiltinServers: [],
     },
     skills: {
-      enabledSkillNames: ['chatbox-product-info'],
+      enabledSkillNames: ['quasar-product-info'],
       translationEnabled: true,
       builtinDefaultsInitialized: true,
     },
