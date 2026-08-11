@@ -1,4 +1,8 @@
 import { createTheme, type ThemeOptions } from '@mui/material/styles'
+import {
+  buildPaletteCssVariables,
+  PALETTE_CSS_VARIABLES,
+} from '@shared/color-integration'
 import { getDefaultInterfaceColors, resolveInterfaceBrandColor } from '@shared/theme-colors'
 import { useLayoutEffect, useMemo } from 'react'
 import { useColorIntegrationPalette } from '@/stores/colorIntegrationStore'
@@ -78,8 +82,15 @@ export default function useAppTheme() {
       rootStyle.setProperty('--chatbox-accent-gradient-start', gradientStart)
       rootStyle.setProperty('--chatbox-accent-gradient-end', gradientEnd)
       rootStyle.setProperty('--chatbox-accent-gradient', `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`)
+      // Dynamic theme JSON maps directly onto semantic CSS custom properties
+      // (--bg-primary, --text-primary, --accent-color, --bg-secondary, --term0..15)
+      // so the UI re-themes instantly when the palette file is loaded/changed.
+      const paletteVariables = buildPaletteCssVariables(colorIntegrationPalette.tokens)
+      for (const [cssVariable, value] of Object.entries(paletteVariables)) {
+        rootStyle.setProperty(cssVariable, value)
+      }
     } else {
-      for (const variable of ACCENT_CSS_VARIABLES) {
+      for (const variable of [...ACCENT_CSS_VARIABLES, ...PALETTE_CSS_VARIABLES]) {
         rootStyle.removeProperty(variable)
       }
     }

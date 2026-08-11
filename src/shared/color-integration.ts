@@ -1,12 +1,16 @@
-// Color Integration: parses external dynamic palette files (e.g. pywal output)
-// into accent / gradient overlay tokens that sit on top of the active base
-// light/dark theme. Supports:
+// Color Integration: parses external dynamic palette files (e.g. pywal output or
+// dynamic theme JSON) into accent / gradient overlay tokens that sit on top of
+// the active base light/dark theme. Supports:
 //   - pywal colors.json   ({ "special": {background, foreground}, "colors": { color0..color15 } })
+//   - dynamic theme JSON  (colour values on the root object or under `colours`/`colors`:
+//                          background, base, text, onBackground, primary,
+//                          surfaceContainer, surface, term0..term15)
 //   - CSS / HTML files    (:root { --accent: #hex; --color5: #hex; ... })
 //   - plain text files    (one hex color per line, e.g. pywal `colors`)
 //
 // This module is shared and side-effect free so it can be unit tested and used
-// from both the renderer and any future non-desktop consumer.
+// from both the renderer and any future non-desktop consumer. Live application
+// of the parsed tokens to the DOM happens in the renderer.
 
 export interface ColorIntegrationPalette {
   /** Primary accent color, used to recolor brand controls and links. */
@@ -22,9 +26,33 @@ export interface ColorIntegrationPalette {
 }
 
 const HEX_COLOR_RE = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
+const BARE_HEX_RE = /^(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
 
 export function isHexColor(value: unknown): value is string {
   return typeof value === 'string' && HEX_COLOR_RE.test(value.trim())
+}
+
+/**
+ * Normalizes a color value into a `#rrggbb`-style hex string. Values that
+ * already start with `#` are returned as-is; bare hex strings (e.g. "15130e")
+ * get a leading `#` prepended. Returns null when the value is not a hex color.
+ */
+export function normalizeHex(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null
+  }
+  const trimmed = value.trim()
+  if (isHexColor(trimmed)) {
+    return trimmed
+  }
+  if (BARE_HEX_RE.test(trimmed)) {
+    return `#${trimmed}`
+  }
+  return null
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 const CSS_VAR_RE = /(--[a-zA-Z0-9-]+)\s*:\s*([^;}\n]+);?/g
@@ -44,8 +72,11 @@ function extractCssVariables(text: string): Record<string, string> {
 function resolveAccent(tokens: Record<string, string>): string | null {
   const candidate =
     tokens.accent ||
+    tokens.primary ||
     tokens.color5 ||
+    tokens.term5 ||
     tokens.color6 ||
+    tokens.term6 ||
     tokens.color4 ||
     tokens.color9 ||
     tokens.color10 ||
@@ -54,8 +85,53 @@ function resolveAccent(tokens: Record<string, string>): string | null {
 }
 
 function resolveGradientEnd(tokens: Record<string, string>, accent: string): string | null {
-  const candidate = tokens.color6 || tokens.color7 || tokens.color5 || accent
+  const candidate = tokens.color6 || tokens.term6 || tokens.color7 || tokens.term7 || tokens.color5 || accent
   return isHexColor(candidate) ? candidate : null
+}
+
+/**
+ * CSS custom properties produced by {@link buildPaletteCssVariables}. Used by
+ * the renderer to clean up previously applied values when the palette clears.
+ */
+export const PALETTE_CSS_VARIABLES: ReadonlyArray<string> = [
+  '--bg-primary',
+  '--text-primary',
+  '--accent-color',
+  '--bg-secondary',
+  ...Array.from({ length: 16 }, (_, index) => `--term${index}`),
+]
+
+const SEMANTIC_CSS_VARIABLE_MAPPING: ReadonlyArray<readonly [string, ReadonlyArray<string>]> = [
+  ['--bg-primary', ['background', 'base']],
+  ['--text-primary', ['text', 'onbackground']],
+  ['--accent-color', ['primary']],
+  ['--bg-secondary', ['surfacecontainer', 'surface']],
+]
+
+/**
+ * Maps a parsed palette's tokens onto the CSS custom properties described by
+ * the dynamic theme JSON mapping, e.g. `colours.background` -> `--bg-primary`
+ * and `colours.term0`..`term15` -> `--term0`..`--term15`. Pure and side-effect
+ * free; the renderer applies the result to `document.documentElement.style`.
+ */
+export function buildPaletteCssVariables(tokens: Record<string, string>): Record<string, string> {
+  const variables: Record<string, string> = {}
+  for (const [cssVariable, sourceKeys] of SEMANTIC_CSS_VARIABLE_MAPPING) {
+    for (const sourceKey of sourceKeys) {
+      const value = tokens[sourceKey]
+      if (value) {
+        variables[cssVariable] = value
+        break
+      }
+    }
+  }
+  for (let index = 0; index <= 15; index += 1) {
+    const value = tokens[`term${index}`]
+    if (value) {
+      variables[`--term${index}`] = value
+    }
+  }
+  return variables
 }
 
 export function parseColorIntegrationPalette(content: string): ColorIntegrationPalette | null {
@@ -65,33 +141,32 @@ export function parseColorIntegrationPalette(content: string): ColorIntegrationP
   }
 
   let tokens: Record<string, string> = {}
-  let background: string | null = null
-  let foreground: string | null = null
 
   if (text.startsWith('{')) {
     try {
       const data: unknown = JSON.parse(text)
-      if (data && typeof data === 'object') {
-        const record = data as {
-          colors?: Record<string, unknown>
-          accent?: unknown
-          special?: { background?: unknown; foreground?: unknown; accent?: unknown }
-          background?: unknown
-          foreground?: unknown
+      if (isRecord(data)) {
+        // Gather every colour dictionary, later entries win: the root object
+        // itself (flat theme files), pywal's `special`, then the nested
+        // `colours` / `colors` dictionaries. Non-colour keys are ignored.
+        const colourDicts: Array<Record<string, unknown>> = [data]
+        if (isRecord(data.special)) {
+          colourDicts.push(data.special)
         }
-        if (record.colors && typeof record.colors === 'object') {
-          for (const [key, value] of Object.entries(record.colors)) {
-            if (isHexColor(value)) {
-              tokens[key.toLowerCase()] = value
+        if (isRecord(data.colours)) {
+          colourDicts.push(data.colours)
+        }
+        if (isRecord(data.colors)) {
+          colourDicts.push(data.colors)
+        }
+        for (const dict of colourDicts) {
+          for (const [key, value] of Object.entries(dict)) {
+            const normalized = normalizeHex(value)
+            if (normalized) {
+              tokens[key.toLowerCase()] = normalized
             }
           }
         }
-        if (isHexColor(record.special?.background)) background = record.special.background
-        if (isHexColor(record.special?.foreground)) foreground = record.special.foreground
-        if (isHexColor(record.special?.accent)) tokens.accent = record.special.accent
-        if (isHexColor(record.accent)) tokens.accent = record.accent
-        if (isHexColor(record.background)) background = record.background
-        if (isHexColor(record.foreground)) foreground = record.foreground
       }
     } catch {
       return null
@@ -122,8 +197,8 @@ export function parseColorIntegrationPalette(content: string): ColorIntegrationP
     return null
   }
 
-  const resolvedBackground = background || tokens.background || null
-  const resolvedForeground = foreground || tokens.foreground || null
+  const resolvedBackground = tokens.background || null
+  const resolvedForeground = tokens.foreground || null
 
   return {
     accent,
