@@ -117,21 +117,6 @@ const FileParseError = NiceModal.create(({ errorCode, fileName }: FileParseError
         components={{
           OpenSettingButton: <span />,
           OpenExtensionSettingButton: <span />,
-          OpenMorePlanButton: (
-            <a
-              className="cursor-pointer underline font-semibold text-blue-600 hover:text-blue-700"
-              onClick={() => {
-                platform.openLink(
-                  buildChatboxUrl(
-                    `/redirect_app/view_more_plans/${settingActions.getLanguage()}?utm_source=app&utm_content=file_parse_error`
-                  )
-                )
-                trackingEvent('click_view_more_plans_button_from_file_parse_error', {
-                  event_category: 'user',
-                })
-              }}
-            />
-          ),
           OpenDocumentParserSettingButton: (
             <a
               className="cursor-pointer underline font-semibold text-blue-600 hover:text-blue-700"
@@ -139,21 +124,6 @@ const FileParseError = NiceModal.create(({ errorCode, fileName }: FileParseError
                 onClose()
                 navigateToSettings('/document-parser')
               }}
-            />
-          ),
-          LinkToHomePage: <LinkTargetBlank href="https://chatboxai.app" />,
-          LinkToAdvancedFileProcessing: (
-            <LinkTargetBlank
-              href={buildChatboxUrl(
-                `/redirect_app/advanced_file_processing/${settingActions.getLanguage()}?utm_source=app&utm_content=file_parse_error`
-              )}
-            />
-          ),
-          LinkToAdvancedUrlProcessing: (
-            <LinkTargetBlank
-              href={buildChatboxUrl(
-                `/redirect_app/advanced_url_processing/${settingActions.getLanguage()}?utm_source=app&utm_content=file_parse_error`
-              )}
             />
           ),
         }}

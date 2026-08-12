@@ -128,15 +128,21 @@ export function createAfetch(platformInfo: PlatformInfo) {
               throw chatboxAIError
             }
           }
-          throw new ApiError(
-            `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
-            response || undefined,
-            res.status,
-            requestId
-          )
+          console.error('API Error Response:', {
+          status: res.status,
+          body: response?.substring(0, 500)
+        })
+        throw new ApiError(
+          `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
+          response || undefined,
+          res.status,
+          requestId
+        )
         }
         return res
       } catch (e) {
+        console.error('IPC Handler Error:', e as Error)
+        console.error((e as Error).stack)
         if (isAbortError(e, init?.signal)) {
           throw e
         }
@@ -326,16 +332,22 @@ export function createAuthenticatedAfetch(config: AuthenticatedAfetchConfig) {
               throw chatboxAIError
             }
           }
-          throw new ApiError(
-            `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
-            response || undefined,
-            res.status,
-            requestId
-          )
+          console.error('API Error Response:', {
+          status: res.status,
+          body: response?.substring(0, 500)
+        })
+        throw new ApiError(
+          `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
+          response || undefined,
+          res.status,
+          requestId
+        )
         }
 
         return res
       } catch (e) {
+        console.error('IPC Handler Error (authenticated):', e as Error)
+        console.error((e as Error).stack)
         if (isAbortError(e, init?.signal)) {
           throw e
         }

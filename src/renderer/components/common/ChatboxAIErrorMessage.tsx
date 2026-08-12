@@ -60,38 +60,6 @@ export const ChatboxAIErrorMessage: FC<ChatboxAIErrorMessageProps> = ({
             }}
           />
         ),
-        OpenMorePlanButton: (
-          <Link
-            component="button"
-            type="button"
-            className="cursor-pointer italic"
-            onClick={() => {
-              platform.openLink(
-                buildChatboxUrl(
-                  `/redirect_app/view_more_plans/${settingActions.getLanguage()}?utm_source=app&utm_content=${trackingSource}`
-                )
-              )
-              trackingEvent('click_view_more_plans_button_from_upgrade_error_tips', {
-                event_category: 'user',
-              })
-            }}
-          />
-        ),
-        LinkToHomePage: <LinkTargetBlank href="https://chatboxai.app" />,
-        LinkToAdvancedFileProcessing: (
-          <LinkTargetBlank
-            href={buildChatboxUrl(
-              `/redirect_app/advanced_file_processing/${settingActions.getLanguage()}?utm_source=app&utm_content=${trackingSource}`
-            )}
-          />
-        ),
-        LinkToAdvancedUrlProcessing: (
-          <LinkTargetBlank
-            href={buildChatboxUrl(
-              `/redirect_app/advanced_url_processing/${settingActions.getLanguage()}?utm_source=app&utm_content=${trackingSource}`
-            )}
-          />
-        ),
         OpenDocumentParserSettingButton: (
           <Link
             component="button"

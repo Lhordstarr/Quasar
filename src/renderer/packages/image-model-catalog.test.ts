@@ -20,9 +20,7 @@ function manifest(imageModels: Array<{ modelId: string; modelName: string }>) {
 // Pollinations is free and always offered, so it is part of every catalog result.
 const pollinationsModels = [
   { provider: ModelProviderEnum.Pollinations, modelId: 'flux', nickname: 'Flux' },
-  { provider: ModelProviderEnum.Pollinations, modelId: 'flux-2', nickname: 'Flux 2' },
   { provider: ModelProviderEnum.Pollinations, modelId: 'flux-schnell', nickname: 'Flux Schnell' },
-  { provider: ModelProviderEnum.Pollinations, modelId: 'flux-2-dev', nickname: 'Flux 2 Dev' },
   { provider: ModelProviderEnum.Pollinations, modelId: 'zimage', nickname: 'Z-Image Turbo' },
 ]
 

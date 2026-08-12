@@ -26,21 +26,26 @@ export async function imageOCR(ocrModel: ModelInterface, messages: Message[]) {
   })
 }
 async function doOCR(model: ModelInterface, imageData: string) {
-  const msg: ModelMessage = {
-    role: 'user',
-    content: [
-      {
-        type: 'text',
-        text: 'OCR the following image into Markdown. Tables should be formatted as HTML. Do not sorround your output with triple backticks.',
-      },
-      { type: 'image' as const, image: imageData },
-    ],
-  }
-  const chatResult = await model.chat([msg], {})
-  const text = chatResult.contentParts
-    .filter((p) => p.type === 'text')
-    .map((p) => p.text)
-    .join('')
+  try {
+    const msg: ModelMessage = {
+      role: 'user',
+      content: [
+        {
+          type: 'text',
+          text: 'OCR the following image into Markdown. Tables should be formatted as HTML. Do not sorround your output with triple backticks.',
+        },
+        { type: 'image' as const, image: imageData },
+      ],
+    }
+    const chatResult = await model.chat([msg], {})
+    const text = chatResult.contentParts
+      .filter((p) => p.type === 'text')
+      .map((p) => p.text)
+      .join('')
 
-  return text
+    return text
+  } catch (e) {
+    console.error('doOCR error:', e)
+    throw new Error('Failed to do OCR: ' + (e instanceof Error ? e.message : String(e)))
+  }
 }

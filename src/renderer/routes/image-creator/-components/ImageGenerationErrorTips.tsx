@@ -88,24 +88,6 @@ export function ImageGenerationErrorTips({ record, onRetry, isRetrying }: ImageG
                     onClick={() => navigateToSettings()}
                   />
                 ),
-                OpenMorePlanButton: (
-                  <Text
-                    component="span"
-                    className="cursor-pointer underline"
-                    c="chatbox-brand"
-                    onClick={() => {
-                      platform.openLink(
-                        buildChatboxUrl(
-                          `/redirect_app/view_more_plans/${settingActions.getLanguage()}?utm_source=app&utm_content=image_creator_upgrade_required`
-                        )
-                      )
-                      trackingEvent('click_view_more_plans_button_from_image_creator', {
-                        event_category: 'user',
-                      })
-                    }}
-                  />
-                ),
-                LinkToHomePage: <LinkTargetBlank href="https://chatboxai.app" />,
               }}
             />
           </Text>

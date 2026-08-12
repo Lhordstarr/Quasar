@@ -42,27 +42,16 @@ function buildHeaders(options: RequestOptions, url: string): Headers {
   const headers = new Headers(options.headers)
   headers.set('Content-Type', 'application/json')
 
-  if (options.useProxy && !isLocalHost(url) && platform.type !== 'mobile') {
-    headers.set('CHATBOX-TARGET-URI', url)
-    headers.set('CHATBOX-PLATFORM', platform.type)
-  }
-
   return headers
 }
 
 async function doRequest(url: string, options: RequestOptions): Promise<Response> {
-  const { signal, retry = 3, useProxy = false, body, method } = options
+  const { signal, retry = 3, body, method } = options
   let requestUrl = url
   const headers = buildHeaders(options, url)
 
-  if (useProxy && !isLocalHost(url) && platform.type !== 'mobile') {
-    const version = await platform.getVersion()
-    headers.set('CHATBOX-VERSION', version || 'unknown')
-    requestUrl = 'https://cors-proxy.chatboxai.app/proxy-api/completions'
-  }
-
   const makeRequest = async () => {
-    if (platform.type === 'mobile' && useProxy) {
+    if (platform.type === 'mobile') {
       return handleMobileRequest(requestUrl, method, headers, body, signal)
     }
 
@@ -98,6 +87,6 @@ export async function fetchWithProxy(input: RequestInfo | URL, init?: RequestIni
     headers: init?.headers,
     body: init?.body,
     signal: init?.signal || undefined,
-    useProxy: true,
+    useProxy: false,
   })
 }

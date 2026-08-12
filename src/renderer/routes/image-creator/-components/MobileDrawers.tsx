@@ -1,6 +1,7 @@
 import { ActionIcon, Box, Flex, ScrollArea, Stack, Text, UnstyledButton } from '@mantine/core'
 import type { ImageGeneration } from '@shared/types'
-import { IconPlus, IconServer } from '@tabler/icons-react'
+import { IconCheck, IconChevronLeft, IconChevronRight, IconPlus, IconServer } from '@tabler/icons-react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Drawer } from 'vaul'
 import { ScalableIcon } from '@/components/common/ScalableIcon'
@@ -100,18 +101,28 @@ export function MobileHistoryDrawer({
    Mobile Model Drawer
    ============================================ */
 
+export interface MobileModelGroup {
+  label: string
+  providerId: string
+  isCustom?: boolean
+  models: { modelId: string; displayName: string }[]
+}
+
 export interface MobileModelDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  modelGroups: {
-    label: string
-    providerId: string
-    isCustom?: boolean
-    models: { modelId: string; displayName: string }[]
-  }[]
+  modelGroups: MobileModelGroup[]
   selectedProvider: string
   selectedModel: string
   onSelect: (provider: string, model: string) => void
+}
+
+function providerLabel(group: MobileModelGroup): string {
+  return group.models.length === 1 ? `${group.label} - ${group.models[0].displayName}` : group.label
+}
+
+function isGroupSelected(group: MobileModelGroup, selectedProvider: string, selectedModel: string): boolean {
+  return group.providerId === selectedProvider && group.models.some((model) => model.modelId === selectedModel)
 }
 
 export function MobileModelDrawer({
@@ -123,6 +134,26 @@ export function MobileModelDrawer({
   onSelect,
 }: MobileModelDrawerProps) {
   const { t } = useTranslation()
+  const [stage, setStage] = useState<{ type: 'providers' } | { type: 'models'; group: MobileModelGroup }>({
+    type: 'providers',
+  })
+
+  useEffect(() => {
+    if (open) {
+      setStage({ type: 'providers' })
+    }
+  }, [open])
+
+  const handleProviderSelect = (group: MobileModelGroup) => {
+    if (group.models.length === 1) {
+      onSelect(group.providerId, group.models[0].modelId)
+      onOpenChange(false)
+    } else {
+      setStage({ type: 'models', group })
+    }
+  }
+
+  const selectedGroup = stage.type === 'models' ? stage.group : null
 
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange} noBodyStyles>
@@ -139,50 +170,75 @@ export function MobileModelDrawer({
           >
             <Drawer.Title asChild>
               <Text size="xs" fw={600} c="dimmed" tt="uppercase" style={{ letterSpacing: 0.5 }}>
-                {t('Select Model')}
+                {selectedGroup ? selectedGroup.label : t('Select Model')}
               </Text>
             </Drawer.Title>
+            {selectedGroup && (
+              <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => setStage({ type: 'providers' })}>
+                <IconChevronLeft size={16} />
+              </ActionIcon>
+            )}
           </Flex>
 
           <ScrollArea flex={1} type="auto" offsetScrollbars>
-            <Stack gap="md" p="xs" pb="xl">
-              {modelGroups.map((group, groupIndex) => (
-                <Stack key={group.providerId} gap={2}>
-                  <Flex align="center" gap={6} px="sm">
-                    {group.isCustom ? (
-                      <ScalableIcon icon={IconServer} size={14} className="text-chatbox-tint-gray" />
-                    ) : (
-                      <ProviderIcon size={14} provider={group.providerId} className="opacity-50" />
-                    )}
-                    <Text size="xs" fw={500} c="dimmed">
-                      {group.label}
-                    </Text>
-                  </Flex>
-                  {group.models.map((model) => {
-                    const isSelected = selectedProvider === group.providerId && selectedModel === model.modelId
+            <Stack gap={2} p="xs" pb="xl">
+              {selectedGroup
+                ? selectedGroup.models.map((model) => {
+                    const isSelected = selectedProvider === selectedGroup.providerId && selectedModel === model.modelId
                     return (
                       <UnstyledButton
-                        key={`${group.providerId}:${model.modelId}`}
+                        key={`${selectedGroup.providerId}:${model.modelId}`}
                         onClick={() => {
-                          onSelect(group.providerId, model.modelId)
+                          onSelect(selectedGroup.providerId, model.modelId)
                           onOpenChange(false)
                         }}
                         className={`
-                          w-full px-4 py-3 rounded-lg transition-colors
-                          ${isSelected ? 'bg-[var(--chatbox-background-brand-secondary)]' : 'hover:bg-[var(--chatbox-background-secondary)]'}
-                        `}
+                        w-full px-4 py-3 rounded-lg transition-colors
+                        ${isSelected ? 'bg-[var(--chatbox-background-brand-secondary)]' : 'hover:bg-[var(--chatbox-background-secondary)]'}
+                      `}
                       >
-                        <Text size="sm" fw={isSelected ? 600 : 400}>
-                          {model.displayName}
-                        </Text>
+                        <Flex align="center" gap={8}>
+                          <Text size="sm" fw={isSelected ? 600 : 400} className="flex-1">
+                            {model.displayName}
+                          </Text>
+                          {isSelected && <IconCheck size={16} className="text-[var(--chatbox-tint-brand)] shrink-0" />}
+                        </Flex>
+                      </UnstyledButton>
+                    )
+                  })
+                : modelGroups.map((group) => {
+                    const isSelected = isGroupSelected(group, selectedProvider, selectedModel)
+                    return (
+                      <UnstyledButton
+                        key={group.providerId}
+                        onClick={() => handleProviderSelect(group)}
+                        className={`
+                        w-full px-4 py-3 rounded-lg transition-colors
+                        ${isSelected ? 'bg-[var(--chatbox-background-brand-secondary)]' : 'hover:bg-[var(--chatbox-background-secondary)]'}
+                      `}
+                      >
+                        <Flex align="center" gap={10}>
+                          {group.isCustom ? (
+                            <ScalableIcon icon={IconServer} size={16} className="text-chatbox-tint-gray shrink-0" />
+                          ) : (
+                            <ProviderIcon size={16} provider={group.providerId} className="opacity-70 shrink-0" />
+                          )}
+                          <Text size="sm" fw={isSelected ? 600 : 400} className="flex-1 truncate">
+                            {providerLabel(group)}
+                          </Text>
+                          {isSelected && <IconCheck size={16} className="text-[var(--chatbox-tint-brand)] shrink-0" />}
+                          {group.models.length > 1 && (
+                            <IconChevronRight size={16} className="text-[var(--chatbox-tint-tertiary)] shrink-0" />
+                          )}
+                        </Flex>
                       </UnstyledButton>
                     )
                   })}
-                  {groupIndex < modelGroups.length - 1 && (
-                    <div className="h-px bg-[var(--chatbox-border-primary)] mx-2 mt-2" />
-                  )}
-                </Stack>
-              ))}
+              {modelGroups.length === 0 && (
+                <Text size="sm" c="dimmed" px="sm" py="xs" ta="center">
+                  {t('No models available')}
+                </Text>
+              )}
             </Stack>
           </ScrollArea>
         </Drawer.Content>

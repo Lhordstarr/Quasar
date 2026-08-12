@@ -78,6 +78,8 @@ interface InputToolbarProps {
   isSmallScreen: boolean
   modelGroups: ImageModelGroup[]
   modelDisplayName: string
+  selectedProvider: string
+  selectedModel: string
   selectedRatio: string
   ratioOptions: string[]
   onModelDrawerOpen: () => void
@@ -92,6 +94,8 @@ function InputToolbar({
   isSmallScreen,
   modelGroups,
   modelDisplayName,
+  selectedProvider,
+  selectedModel,
   selectedRatio,
   ratioOptions,
   onModelDrawerOpen,
@@ -120,7 +124,12 @@ function InputToolbar({
             <IconChevronRight size={14} className="text-[var(--chatbox-tint-tertiary)] rotate-90" />
           </UnstyledButton>
         ) : (
-          <ImageModelSelect modelGroups={modelGroups} onSelect={onModelSelect}>
+          <ImageModelSelect
+            modelGroups={modelGroups}
+            onSelect={onModelSelect}
+            selectedProvider={selectedProvider}
+            selectedModel={selectedModel}
+          >
             <UnstyledButton className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-[var(--chatbox-background-tertiary)] transition-colors">
               <IconSparkles size={16} className="text-[var(--chatbox-tint-secondary)]" />
               <Text size="sm" className="text-[var(--chatbox-tint-secondary)] max-w-[120px] truncate">
@@ -665,6 +674,8 @@ function ImageCreatorPage() {
                     isSmallScreen={isSmallScreen}
                     modelGroups={imageModelGroups}
                     modelDisplayName={modelDisplayName}
+                    selectedProvider={selectedProvider}
+                    selectedModel={selectedModel}
                     selectedRatio={selectedRatio}
                     ratioOptions={ratioOptions}
                     onModelDrawerOpen={() => setShowModelDrawer(true)}

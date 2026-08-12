@@ -15,7 +15,6 @@ import platform from '@/platform'
 import storage from '@/storage'
 import { StorageKeyGenerator } from '@/storage/StoreStorage'
 import { trackEvent } from '@/utils/track'
-import * as toastActions from './toastActions'
 import {
   addGeneratedImage,
   createRecord,
@@ -26,6 +25,7 @@ import {
 } from './imageGenerationStore'
 import { queryClient } from './queryClient'
 import { settingsStore } from './settingsStore'
+import * as toastActions from './toastActions'
 
 const log = getLogger('image-generation-actions')
 
@@ -419,7 +419,8 @@ async function generateImagesDirect(recordId: string, params: GenerateImageParam
     log.error('Direct image generation failed:', err)
 
     const errorRecordUpdate = getErrorRecordUpdate(err)
-    if (isRateLimitOrQuotaError(err) && errorRecordUpdate.error) {
+    const isKeyedProvider = params.model.provider !== ModelProviderEnum.Pollinations
+    if (isKeyedProvider && isRateLimitOrQuotaError(err) && errorRecordUpdate.error) {
       errorRecordUpdate.error = withRateLimitHint(errorRecordUpdate.error)
       toastActions.add(
         'Image generation hit a rate limit or quota. Switch to the free Pollinations AI provider or try a different API key.',

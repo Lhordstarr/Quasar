@@ -301,8 +301,8 @@ describe('imageGenerationActions reference image payload', () => {
       prompt: 'make an image',
       referenceImages: [],
       model: {
-        provider: 'pollinations',
-        modelId: 'flux',
+        provider: 'together-ai',
+        modelId: 'black-forest-labs/FLUX.1-schnell',
       },
       imageGenerateNum: 1,
     })
@@ -320,7 +320,7 @@ describe('imageGenerationActions reference image payload', () => {
     expect(updateRecordMock).toHaveBeenCalledWith(
       'record-1',
       expect.objectContaining({
-        error: expect.stringContaining('switch to the free Pollinations provider'),
+        error: expect.stringContaining('rate limit or quota'),
       })
     )
     expect(toastAddMock).toHaveBeenCalledWith(

@@ -11,22 +11,27 @@ export async function generateImage(
   },
   callback?: (picBase64: string) => void | Promise<void>
 ) {
-  const prompt = getMessageText(params.message)
+  try {
+    const prompt = getMessageText(params.message)
 
-  const dependencies = await createModelDependencies()
-  const images = await Promise.all(
-    params.message.contentParts
-      .filter((c) => c.type === 'image')
-      .map(async (c) => ({ imageUrl: await dependencies.storage.getImage(c.storageKey) }))
-  )
+    const dependencies = await createModelDependencies()
+    const images = await Promise.all(
+      params.message.contentParts
+        .filter((c) => c.type === 'image')
+        .map(async (c) => ({ imageUrl: await dependencies.storage.getImage(c.storageKey) }))
+    )
 
-  return model.paint(
-    {
-      prompt,
-      images,
-      num: params.num,
-    },
-    undefined,
-    callback
-  )
+    return model.paint(
+      {
+        prompt,
+        images,
+        num: params.num,
+      },
+      undefined,
+      callback
+    )
+  } catch (e) {
+    console.error('generateImage error:', e)
+    throw new Error('Failed to generate image: ' + (e instanceof Error ? e.message : String(e)))
+  }
 }

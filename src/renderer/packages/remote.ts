@@ -135,17 +135,22 @@ export async function checkNeedUpdate(version: string, os: string, config: Confi
   type Response = {
     need_update?: boolean
   }
-  // const res = await ofetch<Response>(`${RELEASE_ORIGIN}/chatbox_need_update/${version}`, {
-  const res = await ofetch<Response>(`${getAPIOrigin()}/chatbox_need_update/${version}`, {
-    method: 'POST',
-    retry: 3,
-    body: {
-      uuid: config.uuid,
-      os: os,
-      allowReportingAndTracking: settings.allowReportingAndTracking ? 1 : 0,
-    },
-  })
-  return !!res.need_update
+  try {
+    // const res = await ofetch<Response>(`${RELEASE_ORIGIN}/chatbox_need_update/${version}`, {
+    const res = await ofetch<Response>(`${getAPIOrigin()}/chatbox_need_update/${version}`, {
+      method: 'POST',
+      retry: 3,
+      body: {
+        uuid: config.uuid,
+        os: os,
+        allowReportingAndTracking: settings.allowReportingAndTracking ? 1 : 0,
+      },
+    })
+    return !!res.need_update
+  } catch (e) {
+    console.error('checkNeedUpdate error:', e)
+    throw new Error('Failed to check update: ' + (e instanceof Error ? e.message : String(e)))
+  }
 }
 
 // export async function getSponsorAd(): Promise<null | SponsorAd> {
@@ -188,11 +193,16 @@ export async function getRemoteConfig(config: keyof RemoteConfig) {
   type Response = {
     data: Pick<RemoteConfig, typeof config>
   }
-  const res = await ofetch<Response>(`${getAPIOrigin()}/api/remote_config/${config}`, {
-    retry: 3,
-    headers: await getChatboxHeaders(),
-  })
-  return res['data']
+  try {
+    const res = await ofetch<Response>(`${getAPIOrigin()}/api/remote_config/${config}`, {
+      retry: 3,
+      headers: await getChatboxHeaders(),
+    })
+    return res['data']
+  } catch (e) {
+    console.error('getRemoteConfig error:', e)
+    throw new Error('Failed to get remote config: ' + (e instanceof Error ? e.message : String(e)))
+  }
 }
 
 /**
@@ -350,22 +360,27 @@ export async function generateUploadUrl(params: { licenseKey: string; filename: 
       filename: string
     }
   }
-  const afetch = await getAfetch()
-  const res = await afetch(
-    `${getAPIOrigin()}/api/files/generate-upload-url`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: params.licenseKey,
-        'Content-Type': 'application/json',
-        ...(await getChatboxHeaders()),
+  try {
+    const afetch = await getAfetch()
+    const res = await afetch(
+      `${getAPIOrigin()}/api/files/generate-upload-url`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: params.licenseKey,
+          'Content-Type': 'application/json',
+          ...(await getChatboxHeaders()),
+        },
+        body: JSON.stringify(params),
       },
-      body: JSON.stringify(params),
-    },
-    { parseChatboxRemoteError: true }
-  )
-  const json: Response = await res.json()
-  return json['data']
+      { parseChatboxRemoteError: true }
+    )
+    const json: Response = await res.json()
+    return json['data']
+  } catch (e) {
+    console.error('generateUploadUrl error:', e)
+    throw new Error('Failed to generate upload URL: ' + (e instanceof Error ? e.message : String(e)))
+  }
 }
 
 export async function createUserFile<T extends boolean>(params: {

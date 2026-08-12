@@ -124,6 +124,7 @@
   "AWS Secret Access Key": "Clave de acceso secreta de AWS",
   "Azure API Version": "Versión de la API de Azure",
   "Azure Endpoint": "Endpoint de Azure",
+  "Back": "Atrás",
   "Back to HomePage": "Volver a la página de inicio",
   "Back to Login": "Volver al inicio de sesión",
   "Back to previous message": "Volver al mensaje anterior",
