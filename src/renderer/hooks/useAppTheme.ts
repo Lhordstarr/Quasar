@@ -65,8 +65,10 @@ export default function useAppTheme() {
   }, [realTheme])
 
   useLayoutEffect(() => {
-    // Base light/dark surfaces always come from the active interface theme.
-    // The dynamic palette (pywal etc.) only overrides the accent/gradient.
+    // Base light/dark surfaces come from the active interface theme; when a
+    // dynamic palette is loaded its base/surface tones override them so the
+    // visible app background tints to the theme file instead of pure
+    // black/white.
     const colors = interfaceColors[realTheme]
     const baseBrandColor = resolveInterfaceBrandColor(colors.brand, realTheme)
     const brandColor = colorIntegrationPalette?.accent ?? baseBrandColor
@@ -86,6 +88,17 @@ export default function useAppTheme() {
       // (--bg-primary, --text-primary, --accent-color, --bg-secondary, --term0..15)
       // so the UI re-themes instantly when the palette file is loaded/changed.
       const paletteVariables = buildPaletteCssVariables(colorIntegrationPalette.tokens)
+      // Tint the actual app surfaces (window, sidebar, panels, cards), all of
+      // which derive from the --chatbox-background-* tokens, from the theme
+      // file's exact base/surface palette.
+      const bgPrimary = paletteVariables['--bg-primary']
+      const bgSurface = paletteVariables['--bg-surface'] ?? paletteVariables['--bg-secondary']
+      if (bgPrimary) {
+        rootStyle.setProperty('--chatbox-background-primary', bgPrimary)
+      }
+      if (bgSurface) {
+        rootStyle.setProperty('--chatbox-background-secondary', bgSurface)
+      }
       for (const [cssVariable, value] of Object.entries(paletteVariables)) {
         rootStyle.setProperty(cssVariable, value)
       }

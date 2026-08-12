@@ -95,40 +95,50 @@ function resolveGradientEnd(tokens: Record<string, string>, accent: string): str
  */
 export const PALETTE_CSS_VARIABLES: ReadonlyArray<string> = [
   '--bg-primary',
+  '--bg-surface',
+  '--bg-secondary',
+  '--card-bg',
   '--text-primary',
   '--accent-color',
-  '--bg-secondary',
   ...Array.from({ length: 16 }, (_, index) => `--term${index}`),
 ]
 
 const SEMANTIC_CSS_VARIABLE_MAPPING: ReadonlyArray<readonly [string, ReadonlyArray<string>]> = [
-  ['--bg-primary', ['background', 'base']],
+  // Primary window background tint: exact base colour of the theme file.
+  ['--bg-primary', ['background', 'base', 'surface']],
   ['--text-primary', ['text', 'onbackground']],
   ['--accent-color', ['primary']],
-  ['--bg-secondary', ['surfacecontainer', 'surface']],
+  // Surface / card tone for panels and containers.
+  ['--bg-secondary', ['surfacecontainer', 'surfacevariant']],
 ]
 
 /**
  * Maps a parsed palette's tokens onto the CSS custom properties described by
- * the dynamic theme JSON mapping, e.g. `colours.background` -> `--bg-primary`
- * and `colours.term0`..`term15` -> `--term0`..`--term15`. Pure and side-effect
+ * the dynamic theme JSON mapping, e.g. `colours.background` -> `--bg-primary`,
+ * `colours.surfaceContainer` -> `--bg-secondary` / `--card-bg`, and
+ * `colours.term0`..`term15` -> `--term0`..`--term15`. Pure and side-effect
  * free; the renderer applies the result to `document.documentElement.style`.
  */
 export function buildPaletteCssVariables(tokens: Record<string, string>): Record<string, string> {
   const variables: Record<string, string> = {}
   for (const [cssVariable, sourceKeys] of SEMANTIC_CSS_VARIABLE_MAPPING) {
     for (const sourceKey of sourceKeys) {
-      const value = tokens[sourceKey]
-      if (value) {
-        variables[cssVariable] = value
+      const normalized = normalizeHex(tokens[sourceKey])
+      if (normalized) {
+        variables[cssVariable] = normalized
         break
       }
     }
   }
+  const secondary = variables['--bg-secondary']
+  if (secondary) {
+    variables['--bg-surface'] = secondary
+    variables['--card-bg'] = secondary
+  }
   for (let index = 0; index <= 15; index += 1) {
-    const value = tokens[`term${index}`]
-    if (value) {
-      variables[`--term${index}`] = value
+    const normalized = normalizeHex(tokens[`term${index}`])
+    if (normalized) {
+      variables[`--term${index}`] = normalized
     }
   }
   return variables

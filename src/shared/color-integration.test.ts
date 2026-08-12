@@ -160,10 +160,10 @@ describe('parseColorIntegrationPalette', () => {
     const palette = parseColorIntegrationPalette(
       JSON.stringify({
         colours: {
-          base: '15130e',
+          background: '15130e',
           text: 'f8f4e7',
           primary: 'd9c8a9',
-          surface: '2a2319',
+          surfaceContainer: '2a2319',
           term0: '15130e',
           term1: 'e6b45e',
           term7: '8aadf4',
@@ -173,12 +173,31 @@ describe('parseColorIntegrationPalette', () => {
     expect(palette?.accent).toBe('#d9c8a9')
     expect(palette && buildPaletteCssVariables(palette.tokens)).toEqual({
       '--bg-primary': '#15130e',
+      '--bg-surface': '#2a2319',
+      '--bg-secondary': '#2a2319',
+      '--card-bg': '#2a2319',
       '--text-primary': '#f8f4e7',
       '--accent-color': '#d9c8a9',
-      '--bg-secondary': '#2a2319',
       '--term0': '#15130e',
       '--term1': '#e6b45e',
       '--term7': '#8aadf4',
+    })
+  })
+
+  it('resolves the primary background via base then surface fallbacks', () => {
+    const basePalette = buildPaletteCssVariables({ base: '111111', surface: '222222' })
+    expect(basePalette['--bg-primary']).toBe('#111111')
+
+    const surfacePalette = buildPaletteCssVariables({ surface: '222222' })
+    expect(surfacePalette['--bg-primary']).toBe('#222222')
+    expect(surfacePalette['--bg-secondary']).toBeUndefined()
+  })
+
+  it('maps surfaceVariant as a secondary background source', () => {
+    expect(buildPaletteCssVariables({ surfacevariant: '333333' })).toEqual({
+      '--bg-secondary': '#333333',
+      '--bg-surface': '#333333',
+      '--card-bg': '#333333',
     })
   })
 
@@ -191,6 +210,8 @@ describe('parseColorIntegrationPalette', () => {
     ).toEqual({
       '--text-primary': '#ffffff',
       '--bg-secondary': '#123456',
+      '--bg-surface': '#123456',
+      '--card-bg': '#123456',
     })
   })
 })

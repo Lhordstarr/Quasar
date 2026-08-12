@@ -63,6 +63,14 @@
   --chatbox-background-tertiary-hover: #ced4da;
   --chatbox-background-disabled: #e9ecef;
 
+  /* dynamic palette semantic aliases (tinted live by Color Integration) */
+  --bg-primary: var(--chatbox-background-primary);
+  --bg-surface: var(--chatbox-background-secondary);
+  --bg-secondary: var(--chatbox-background-secondary);
+  --card-bg: var(--chatbox-background-secondary);
+  --text-primary: var(--chatbox-tint-primary);
+  --accent-color: var(--chatbox-brand);
+
   --chatbox-background-brand-primary: var(--chatbox-accent-gradient);
   --chatbox-background-brand-primary-hover: color-mix(in srgb, var(--chatbox-accent), black 12%);
   --chatbox-background-brand-secondary: color-mix(in srgb, var(--chatbox-accent), transparent 92%);
@@ -152,6 +160,14 @@
   --chatbox-background-tertiary-hover: #696969;
   --chatbox-background-disabled: #2e2e2e;
 
+  /* dynamic palette semantic aliases (tinted live by Color Integration) */
+  --bg-primary: var(--chatbox-background-primary);
+  --bg-surface: var(--chatbox-background-secondary);
+  --bg-secondary: var(--chatbox-background-secondary);
+  --card-bg: var(--chatbox-background-secondary);
+  --text-primary: var(--chatbox-tint-primary);
+  --accent-color: var(--chatbox-brand);
+
   --chatbox-background-brand-primary: var(--chatbox-accent-gradient);
   --chatbox-background-brand-primary-hover: color-mix(in srgb, var(--chatbox-accent), black 12%);
   --chatbox-background-brand-secondary: color-mix(in srgb, var(--chatbox-accent), transparent 80%);
@@ -179,6 +195,16 @@
 
   --chatbox-background-mask-overlay: rgb(31, 31, 31, 0.78);
   --chatbox-background-mask-lighten: rgb(173, 181, 189, 0.48);
+}
+
+/* Bind the app window background to the dynamic palette base colour so it
+ * tints live when a Color Integration theme file is loaded or modified.
+ * Falls back to the active light/dark theme via the --bg-primary default. */
+html,
+body,
+#root,
+#app {
+  background-color: var(--bg-primary) !important;
 }
 
 :root[data-mantine-color-scheme="light"][data-mantine-color-scheme],
