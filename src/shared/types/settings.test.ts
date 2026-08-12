@@ -101,9 +101,14 @@ describe('SettingsSchema color integration path', () => {
     const legacySettings: Record<string, unknown> = { ...defaultSettings() }
     delete legacySettings.colorIntegrationPath
 
-    expect(SettingsSchema.parse(import {describe, expect, test } from 'vitest'
-import { settings as defaultSettings } from '../defaults'
-import { SessionSettingsSchema, SettingsSchema } from './settings'
+    expect(SettingsSchema.parse(legacySettings)).toEqual(
+      expect.objectContaining({ colorIntegrationPath: '' })
+    )
+  })
+})
+
+describe('SettingsSchema RAG default models', () => {
+  test('parses default embedding and rerank model selections', () => {
 
 describe('SettingsSchema RAG default models', () => {
   test('parses default embedding and rerank model selections', () => {
