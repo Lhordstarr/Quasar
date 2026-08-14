@@ -8,11 +8,7 @@ import {
   isBackupSessionPath,
 } from './archive-layout'
 import { base64ToBytes, bytesToBase64, decodeStoredBlob, sha256Checksum } from './codec'
-import {
-  restoreSessionMetaResourceKeys,
-  restoreSessionResourceKeys,
-  restoreSettingsResourceKeys,
-} from './resources'
+import { restoreSessionMetaResourceKeys, restoreSessionResourceKeys, restoreSettingsResourceKeys } from './resources'
 import { BackupStorageKey, backupSessionStorageKey } from './storage-keys'
 import {
   type BackupManifest,

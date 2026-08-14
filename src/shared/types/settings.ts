@@ -227,11 +227,11 @@ const UnifiedTokenUsageDetailSchema = z.object({
 const ChatboxAIPlanTypeSchema = z.enum(['free', 'lite', 'pro', 'pro_plus', 'quota_pack'])
 
 const ChatboxAILicenseDetailSchema = z.object({
-  type: z.enum(['chatboxai-3.5', 'chatboxai-4']).optional(),
-  name: z.string(),
+  type: z.enum(['free', 'lite', 'pro', 'pro_plus', 'quota_pack']).optional(),
+  name: z.string().optional(),
   plan: ChatboxAIPlanTypeSchema.optional().catch(undefined),
   status: z.string().optional(),
-  defaultModel: z.enum(['chatboxai-3.5', 'chatboxai-4']).optional(),
+  defaultModel: z.string().optional(),
   remaining_quota_35: z.number(),
   remaining_quota_4: z.number(),
   remaining_quota_image: z.number(),

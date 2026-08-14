@@ -145,7 +145,7 @@ const MessageList = forwardRef<MessageListRef, MessageListProps>((props, ref) =>
     }
 
     return renderItems.flatMap((item, itemIndex) =>
-      item.messages.filter(isUserNavigationMessage).map((message) => ({
+      (item.messages || []).filter(isUserNavigationMessage).map((message) => ({
         messageId: message.id,
         itemIndex,
         text: getMessageText(message, true, false).trim(),
@@ -489,12 +489,12 @@ const MessageList = forwardRef<MessageListRef, MessageListProps>((props, ref) =>
                           : undefined
                       } // key
                     >
-                      {item.messages.map((message, messageIndex) =>
+                      {(item.messages || []).map((message, messageIndex) =>
                         renderMessageBlock(message, {
                           isFirstItem: isFirstItem && messageIndex === 0,
-                          isLastItem: isLastItem && messageIndex === item.messages.length - 1,
+                          isLastItem: isLastItem && messageIndex === (item.messages?.length || 0) - 1,
                         })
-                      )}
+                      ) || null}
                       {/* <div aria-hidden="true" className="flex-1" /> */}
                     </div>
                   </div>

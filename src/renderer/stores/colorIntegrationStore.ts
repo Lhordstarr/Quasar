@@ -21,8 +21,7 @@ export const colorIntegrationStore = createStore<ColorIntegrationState>()((set) 
   filePath: '',
   error: null,
   lastUpdatedAt: null,
-  apply: (palette, filePath) =>
-    set({ palette, status: 'watching', filePath, error: null, lastUpdatedAt: Date.now() }),
+  apply: (palette, filePath) => set({ palette, status: 'watching', filePath, error: null, lastUpdatedAt: Date.now() }),
   // Keep the last good palette on transient read errors (e.g. a tool rewriting
   // the file via rename) so the UI does not flicker back to the base theme.
   setError: (error) => set(() => ({ status: 'error', error })),

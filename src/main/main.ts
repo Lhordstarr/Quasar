@@ -772,13 +772,7 @@ ipcMain.handle('relaunch', () => {
   app.relaunch()
   app.quit()
 })
-
-ipcMain.handle('analysticTrackingEvent', (event, dataJson) => {
-  const data = JSON.parse(dataJson)
-  analystic.event(data.name, data.params).catch((e) => {
-    log.error('analystic_tracking_event', e)
-  })
-})
+ipcMain.handle("analysticTrackingEvent", (event, dataJson) => { return; })
 
 ipcMain.handle('getConfig', (event) => {
   return getConfig()

@@ -104,11 +104,11 @@ export const MobileModelSelector = forwardRef<HTMLDivElement, MobileModelSelecto
             <Stack key={providerId} gap={4}>
               <ProviderHeader
                 provider={group.provider || { id: providerId, name: providerId }}
-                modelCount={group.models.length}
+                modelCount={group.models?.length || 0}
                 showChevron={false}
                 variant="mobile"
               />
-              {group.models.map((fm) => {
+              {group.models?.map((fm) => {
                 if (!fm.provider || !fm.model) return null
                 return (
                   <ModelItemInDrawer

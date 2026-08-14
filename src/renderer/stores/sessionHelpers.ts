@@ -32,7 +32,6 @@ import * as defaults from '../../shared/defaults'
 import { SESSION_ATTACHMENT_RAG_LOG_PREFIX } from '../../shared/session-attachment-rag/logging'
 import { createMessage, type Message, SessionSettingsSchema, TOKEN_CACHE_KEYS } from '../../shared/types'
 import type { AttachmentPreparationResult, PreprocessedFile } from '../types/input-box'
-import { resolveChatboxLicenseDefaultModel } from './defaultChatModel'
 import { lastUsedModelStore } from './lastUsedModelStore'
 import {
   SESSION_ATTACHMENT_RAG_LARGE_ATTACHMENT_WARNING,
@@ -987,7 +986,7 @@ export function initEmptyChatSession(): Omit<Session, 'id'> {
         provider: settings.defaultChatModel.provider,
         modelId: settings.defaultChatModel.model,
       }
-    : lastUsedChatModel || resolveChatboxLicenseDefaultModel(settings)
+    : lastUsedChatModel
   const newSession: Omit<Session, 'id'> = {
     name: 'Untitled',
     type: 'chat',

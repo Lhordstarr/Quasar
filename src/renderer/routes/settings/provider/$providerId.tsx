@@ -355,12 +355,13 @@ function ProviderSettings({ providerId }: { providerId: string }) {
 
   const resetModels = () => {
     setProviderSettings({
-      models: baseInfo?.defaultSettings?.models,
+      models: [],
     })
   }
 
   const [fetchingModels, setFetchingModels] = useState(false)
   const [fetchedModels, setFetchedModels] = useState<ProviderModelInfo[]>()
+  const [fetchError, setFetchError] = useState<{ message: string; statusCode?: number } | null>(null)
 
   const handleFetchModels = async () => {
     if (!baseInfo) return
@@ -368,10 +369,7 @@ function ProviderSettings({ providerId }: { providerId: string }) {
     try {
       setFetchedModels(undefined)
       setFetchingModels(true)
-      const providerDefinition = getProviderDefinition(baseInfo.id)
-      if (providerDefinition?.modelsDevProviderId) {
-        await forceRefreshRegistry()
-      }
+      setFetchError(null)
       const modelConfig = getModelSettingUtil(baseInfo.id, baseInfo.isCustom ? baseInfo.type : undefined)
       const modelList = await modelConfig.getMergeOptionGroups({
         ...baseInfo?.defaultSettings,
@@ -384,9 +382,13 @@ function ProviderSettings({ providerId }: { providerId: string }) {
         addToast(t('Failed to fetch models'))
       }
       setFetchingModels(false)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch models', error)
-      setFetchedModels(undefined)
+      const statusCode = error?.response?.status || error?.status
+      setFetchError({
+        message: error?.message || 'Failed to fetch models',
+        statusCode,
+      })
       setFetchingModels(false)
     }
   }
@@ -976,6 +978,43 @@ function ProviderSettings({ providerId }: { providerId: string }) {
               </Button>
             </Flex>
           </Flex>
+
+          {fetchError && (
+            <Stack
+              gap="xs"
+              className="p-4 bg-chatbox-background-secondary dark:bg-chatbox-background-secondary-alt rounded-lg border-chatbox-border-primary"
+            >
+              <Text c="chatbox-error" size="sm" textAlign="center">
+                HTTP {fetchError.statusCode || ''} error:
+              </Text>
+              <Text c="chatbox-tertiary" size="sm" textAlign="center" mt="xs" wrap>
+                {fetchError.message}
+              </Text>
+              <Flex gap="xs" justify="center" mt="sm">
+                <Button
+                  variant="transparent"
+                  size="xs"
+                  onClick={() => {
+                    setFetchError(null)
+                  }}
+                >
+                  {t('Retry')}
+                </Button>
+                <Button
+                  variant="transparent"
+                  size="xs"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `HTTP ${fetchError.statusCode || 'Unknown'} error: ${fetchError.message}`
+                    )
+                    addToast(t('Error log copied to clipboard'))
+                  }}
+                >
+                  {t('Copy Log')}
+                </Button>
+              </Flex>
+            </Stack>
+          )}
 
           <ModelList
             models={displayModels}

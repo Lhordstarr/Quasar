@@ -65,14 +65,19 @@ const SessionSettingsModal = NiceModal.create(
     const onReset = (event: React.MouseEvent) => {
       event.stopPropagation()
       event.preventDefault()
-      setEditingData((_editingData) =>
-        _editingData
-          ? {
-              ..._editingData,
-              settings: pick(_editingData.settings, ['provider', 'modelId']),
-            }
-          : _editingData
-      )
+      setEditingData((_editingData) => {
+        if (_editingData) {
+          return {
+            ..._editingData,
+            settings: {
+              ..._editingData.settings,
+              provider: undefined,
+              modelId: undefined,
+            },
+          }
+        }
+        return _editingData
+      })
     }
 
     useEffect(() => {

@@ -22,7 +22,6 @@ import { getForceShowNewUserScenarioCardsFlag } from '@/dev/devToolsFlags'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
 import { useAuthInfoStore } from '@/stores/authInfoStore'
 import { createSession as createSessionStore } from '@/stores/chatStore'
-import { resolveChatboxLicenseDefaultModel } from '@/stores/defaultChatModel'
 import { getHasCompletedFirstSuccessfulChat } from '@/stores/firstSuccessfulChat'
 import { generate, submitNewUserMessage, switchCurrentSession } from '@/stores/sessionActions'
 import { initEmptyChatSession } from '@/stores/sessionHelpers'
@@ -39,7 +38,7 @@ const scenarioAgentModeOff = {
 
 const firstChatScenarioDefaultModel = {
   provider: ModelProviderEnum.ChatboxAI,
-  modelId: 'chatboxai-3.5',
+  modelId: undefined,
 } satisfies Pick<SessionSettings, 'provider' | 'modelId'>
 
 export const Route = createFileRoute('/')({
@@ -114,11 +113,7 @@ function Index() {
 
   useEffect(() => {
     setSession((old) => {
-      if (
-        hasCompletedFirstSuccessfulChat === false &&
-        isLoggedIn &&
-        !hasUserSelectedModelRef.current
-      ) {
+      if (hasCompletedFirstSuccessfulChat === false && isLoggedIn && !hasUserSelectedModelRef.current) {
         if (
           old.settings?.provider === firstChatScenarioDefaultModel.provider &&
           old.settings?.modelId === firstChatScenarioDefaultModel.modelId
@@ -141,12 +136,7 @@ function Index() {
             provider: defaultChatModel.provider,
             modelId: defaultChatModel.model,
           }
-        : resolveChatboxLicenseDefaultModel({
-            licenseKey,
-            hasExpiredLicense,
-            licenseDetail,
-            licensePlanName,
-          })
+        : undefined
       if (!defaultModel) {
         return old
       }
@@ -347,4 +337,3 @@ function Index() {
     </Page>
   )
 }
-

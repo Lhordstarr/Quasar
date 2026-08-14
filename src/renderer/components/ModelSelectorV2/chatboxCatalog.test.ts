@@ -9,22 +9,15 @@ function createCatalog(): ChatboxAIModelList {
     groups: [
       {
         id: 'advanced',
-        modelIds: ['chatboxai-4', 'gpt-5.5', 'claude-opus-4.8'],
-        featuredModelIds: ['chatboxai-4'],
+        modelIds: ['gpt-5.5', 'claude-opus-4.8'],
+        featuredModelIds: ['gpt-5.5'],
       },
       {
         id: 'basic',
-        modelIds: ['chatboxai-3.5', 'deepseek-v4-pro'],
+        modelIds: ['deepseek-v4-pro'],
       },
     ],
     models: {
-      'chatboxai-4': {
-        modelId: 'chatboxai-4',
-        modelName: 'Chatbox AI 4',
-        access: { available: true },
-        costLevel: '',
-        description: '',
-      },
       'gpt-5.5': {
         modelId: 'gpt-5.5',
         modelName: 'GPT 5.5',
@@ -37,13 +30,6 @@ function createCatalog(): ChatboxAIModelList {
         modelName: 'Claude Opus 4.8',
         access: { available: true },
         costLevel: 'high',
-        description: '',
-      },
-      'chatboxai-3.5': {
-        modelId: 'chatboxai-3.5',
-        modelName: 'Chatbox AI 3.5',
-        access: { available: true },
-        costLevel: '',
         description: '',
       },
       'deepseek-v4-pro': {
@@ -67,9 +53,9 @@ describe('chatboxCatalog', () => {
       collapsedGroupIds: new Set(),
     })
 
-    expect(views[0].modelIds).toEqual(['chatboxai-4', 'gpt-5.5', 'claude-opus-4.8'])
-    expect(views[1].modelIds).toEqual(['chatboxai-3.5', 'deepseek-v4-pro'])
-    expect(views.map((view) => view.total)).toEqual([3, 2])
+    expect(views[0].modelIds).toEqual(['gpt-5.5', 'claude-opus-4.8'])
+    expect(views[1].modelIds).toEqual(['deepseek-v4-pro'])
+    expect(views.map((view) => view.total)).toEqual([2, 1])
   })
 
   test('collapses groups and preserves total count', () => {
@@ -80,7 +66,7 @@ describe('chatboxCatalog', () => {
     })
 
     expect(views[1].modelIds).toEqual([])
-    expect(views[1].total).toBe(2)
+    expect(views[1].total).toBe(1)
   })
 
   test('applies modelFilter to visible models and totals', () => {
@@ -91,8 +77,8 @@ describe('chatboxCatalog', () => {
       modelFilter: (modelId) => modelId !== 'gpt-5.5',
     })
 
-    expect(views[0].modelIds).toEqual(['chatboxai-4', 'claude-opus-4.8'])
-    expect(views[0].total).toBe(2)
+    expect(views[0].modelIds).toEqual(['claude-opus-4.8'])
+    expect(views[0].total).toBe(1)
   })
 
   test('matches search against provider, model id, and model name', () => {

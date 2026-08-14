@@ -202,10 +202,7 @@ export async function exportBackupArchive(options: BackupExportOptions): Promise
       const settings = await options.storage.getItem<Settings | null>(BackupStorageKey.Settings, null)
       if (settings) {
         cleanedSettings = cleanSettingsForBackup(settings, options.includeKeys)
-        addResourceReferences(
-          resourceCandidates,
-          collectGlobalResourceReferences(cleanedSettings as Partial<Settings>)
-        )
+        addResourceReferences(resourceCandidates, collectGlobalResourceReferences(cleanedSettings as Partial<Settings>))
         const { archive, descriptor } = await jsonEntry(BACKUP_SETTINGS_PATH, cleanedSettings)
         data.settings = descriptor
         yield archive

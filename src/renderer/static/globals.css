@@ -46,7 +46,11 @@
   --chatbox-accent: var(--chatbox-brand);
   --chatbox-accent-gradient-start: var(--chatbox-brand);
   --chatbox-accent-gradient-end: var(--chatbox-brand);
-  --chatbox-accent-gradient: linear-gradient(135deg, var(--chatbox-accent-gradient-start), var(--chatbox-accent-gradient-end));
+  --chatbox-accent-gradient: linear-gradient(
+    135deg,
+    var(--chatbox-accent-gradient-start),
+    var(--chatbox-accent-gradient-end)
+  );
 
   --chatbox-border-primary: #dee2e6;
   --chatbox-border-secondary: #ced4da;
@@ -143,7 +147,11 @@
   --chatbox-accent: var(--chatbox-brand);
   --chatbox-accent-gradient-start: var(--chatbox-brand);
   --chatbox-accent-gradient-end: var(--chatbox-brand);
-  --chatbox-accent-gradient: linear-gradient(135deg, var(--chatbox-accent-gradient-start), var(--chatbox-accent-gradient-end));
+  --chatbox-accent-gradient: linear-gradient(
+    135deg,
+    var(--chatbox-accent-gradient-start),
+    var(--chatbox-accent-gradient-end)
+  );
 
   --chatbox-border-primary: #495057;
   --chatbox-border-secondary: #868e96;

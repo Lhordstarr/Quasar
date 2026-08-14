@@ -117,7 +117,7 @@ describe('defaults', () => {
     const result: SessionSettings = chatSessionSettings()
 
     expect(result.provider).toBe(ModelProviderEnum.ChatboxAI)
-    expect(result.modelId).toBe('chatboxai-4')
+    expect(result.modelId).toBeUndefined()
   })
 
   it('pictureSessionSettings() returns provider, modelId, dalleStyle, imageGenerateNum', () => {

@@ -30,7 +30,15 @@ import {
 import { type Language, Theme } from '@shared/types'
 import { formatFileSize } from '@shared/utils'
 import { getBackupFilename } from '@shared/utils/backup'
-import { IconCheck, IconDeviceFloppy, IconFolderOpen, IconInfoCircle, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
+import {
+  IconCheck,
+  IconDeviceFloppy,
+  IconFolderOpen,
+  IconInfoCircle,
+  IconPencil,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react'
 import { createFileRoute } from '@tanstack/react-router'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useRef, useState } from 'react'

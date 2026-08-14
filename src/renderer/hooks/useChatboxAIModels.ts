@@ -44,22 +44,17 @@ const useChatboxAIModels = () => {
   const { data, ...others } = useQuery({
     queryKey: ['chatbox-ai-models', language, licenseKey],
     queryFn: async () => {
-      const [manifest, modelList] = await Promise.all([
-        getModelManifest({
-          aiProvider: ModelProviderEnum.ChatboxAI,
-          licenseKey,
-          language,
-        }),
-        getChatboxAIModelList({ licenseKey, language }).catch((error) => {
-          console.error('[Chatbox AI model_list] failed', error)
-          return null
-        }),
-      ])
+      let modelList: any = null
+      try {
+        modelList = await getChatboxAIModelList({ licenseKey, language })
+      } catch (error) {
+        console.error('[Chatbox AI model_list] failed', error)
+        modelList = null
+      }
       const modelListModels = modelListToProviderModels(modelList)
-      const models = modelListModels.length > 0 ? modelListModels : manifest.models.map(toProviderModelInfo)
 
       // 只更新 ChatboxAI provider 的 models 配置，不影响其他 provider
-      if (models.length > 0) {
+      if (modelListModels.length > 0) {
         // 使用函数式更新，确保只修改 models 字段，保留其他配置
         setProviderSettings((prevChatboxAISettings) => ({
           // 保留现有的 ChatboxAI 配置（如 excludedModels 等）
@@ -70,22 +65,18 @@ const useChatboxAIModels = () => {
       }
 
       return {
-        ...manifest,
-        models,
+        models: modelListModels.length > 0 ? modelListModels : [],
         modelList,
       }
     },
     staleTime: 3600 * 1000,
   })
 
-  const allChatboxAIModels = useMemo(
-    () => data?.models || chatboxAISettings?.models || [],
-    [data, chatboxAISettings?.models]
-  )
+  const allChatboxAIModels = useMemo(() => data?.models || [], [data])
 
   const chatboxAIImageModels = useMemo(
     () =>
-      data?.imageModels.map(
+      (data?.imageModels || []).map(
         (item) =>
           ({
             modelId: item.modelId,
@@ -95,7 +86,7 @@ const useChatboxAIModels = () => {
             type: item.type || 'image',
             contextWindow: item.contextWindow || undefined,
           }) as ProviderModelInfo
-      ) || [],
+      ),
     [data]
   )
 

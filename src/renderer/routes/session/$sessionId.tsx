@@ -15,7 +15,6 @@ import ThreadHistoryDrawer from '@/components/session/ThreadHistoryDrawer'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
 import { defaultSessionsForCN, defaultSessionsForEN } from '@/packages/initial_data'
 import { updateSession as updateSessionStore, useSession } from '@/stores/chatStore'
-import { applyChatboxLicenseDefaultModelToSession } from '@/stores/defaultChatModel'
 import { lastUsedModelStore } from '@/stores/lastUsedModelStore'
 import * as scrollActions from '@/stores/scrollActions'
 import {
@@ -61,13 +60,8 @@ function RouteComponent() {
     if (!currentSession || !builtInTemplateSessionIds.has(currentSession.id)) {
       return currentSession
     }
-    return applyChatboxLicenseDefaultModelToSession(currentSession, {
-      licenseKey,
-      hasExpiredLicense,
-      licenseDetail,
-      licensePlanName,
-    })
-  }, [currentSession, hasExpiredLicense, licenseDetail, licenseKey, licensePlanName])
+    return currentSession
+  }, [currentSession])
   const generatingMessages = useMemo(
     () => generationControlMessages.filter((message) => message.generating),
     [generationControlMessages]

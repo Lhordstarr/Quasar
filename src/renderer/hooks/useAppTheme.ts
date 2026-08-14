@@ -1,8 +1,5 @@
 import { createTheme, type ThemeOptions } from '@mui/material/styles'
-import {
-  buildPaletteCssVariables,
-  PALETTE_CSS_VARIABLES,
-} from '@shared/color-integration'
+import { buildPaletteCssVariables, PALETTE_CSS_VARIABLES } from '@shared/color-integration'
 import { getDefaultInterfaceColors, resolveInterfaceBrandColor } from '@shared/theme-colors'
 import { useLayoutEffect, useMemo } from 'react'
 import { useColorIntegrationPalette } from '@/stores/colorIntegrationStore'
@@ -111,10 +108,7 @@ export default function useAppTheme() {
 
   const effectiveBrandColor = colorIntegrationPalette?.accent ?? interfaceColors[realTheme].brand
   const themeObj = useMemo(
-    () =>
-      createTheme(
-        getThemeDesign(realTheme, language, resolveInterfaceBrandColor(effectiveBrandColor, realTheme))
-      ),
+    () => createTheme(getThemeDesign(realTheme, language, resolveInterfaceBrandColor(effectiveBrandColor, realTheme))),
     [interfaceColors, language, realTheme, effectiveBrandColor]
   )
   return themeObj

@@ -11,13 +11,7 @@ import Markdown from '@/components/Markdown'
 import { cn } from '@/lib/utils'
 import type { UserLicense } from '@/packages/remote'
 import type { GuideToolPart, GuideUIMessage, UserType } from '../-hooks/useGuideSession'
-import {
-  AutoNewChatLoading,
-  FreeTrialLink,
-  NewChatButton,
-  NewChatTip,
-  ProviderSettingsButton,
-} from './ActionButton'
+import { AutoNewChatLoading, FreeTrialLink, NewChatButton, NewChatTip, ProviderSettingsButton } from './ActionButton'
 import { ClaimWaitingCard } from './ClaimWaitingCard'
 import { SuggestedQuestions } from './SuggestedQuestions'
 import { UserTypeCards } from './UserTypeCards'
@@ -166,33 +160,33 @@ export function GuideMessage({
             {/* Tool parts - rendered outside the text container */}
             <Stack gap="xs" mt={hasTextContent ? 'xs' : 0}>
               {message.parts.map((part) => {
-                  if (part.type.startsWith('tool-')) {
-                    const toolPart = part as GuideToolPart
-                    // Always render certain tools regardless of message position:
-                    // - show_user_type_cards: selection state persists
-                    // - show_suggested_questions: users can continue clicking questions
-                    // Only hide other tools for non-last messages
-                    if (
-                      !isLastMessage &&
-                      toolPart.toolName !== 'show_user_type_cards' &&
-                      toolPart.toolName !== 'show_suggested_questions'
-                    ) {
-                      return null
-                    }
-                    // Suggested questions should always be clickable (not disabled)
-                    const shouldDisable = !isLastMessage && toolPart.toolName !== 'show_suggested_questions'
-                    return (
-                      <ToolPartRenderer
-                        key={toolPart.toolCallId}
-                        part={toolPart}
-                        onSelectUserType={onSelectUserType}
-                        onQuestionClick={onQuestionClick}
-                        onClaimStart={onClaimStart}
-                        onClaimDetected={onClaimDetected}
-                        disabled={shouldDisable}
-                      />
-                    )
+                if (part.type.startsWith('tool-')) {
+                  const toolPart = part as GuideToolPart
+                  // Always render certain tools regardless of message position:
+                  // - show_user_type_cards: selection state persists
+                  // - show_suggested_questions: users can continue clicking questions
+                  // Only hide other tools for non-last messages
+                  if (
+                    !isLastMessage &&
+                    toolPart.toolName !== 'show_user_type_cards' &&
+                    toolPart.toolName !== 'show_suggested_questions'
+                  ) {
+                    return null
                   }
+                  // Suggested questions should always be clickable (not disabled)
+                  const shouldDisable = !isLastMessage && toolPart.toolName !== 'show_suggested_questions'
+                  return (
+                    <ToolPartRenderer
+                      key={toolPart.toolCallId}
+                      part={toolPart}
+                      onSelectUserType={onSelectUserType}
+                      onQuestionClick={onQuestionClick}
+                      onClaimStart={onClaimStart}
+                      onClaimDetected={onClaimDetected}
+                      disabled={shouldDisable}
+                    />
+                  )
+                }
                 return null
               })}
             </Stack>

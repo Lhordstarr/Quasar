@@ -149,9 +149,7 @@ describe('parseColorIntegrationPalette', () => {
   })
 
   it('uses term colors as a fallback accent for theme files without primary', () => {
-    const palette = parseColorIntegrationPalette(
-      JSON.stringify({ colours: { term5: 'ff00aa', term6: '00aaff' } })
-    )
+    const palette = parseColorIntegrationPalette(JSON.stringify({ colours: { term5: 'ff00aa', term6: '00aaff' } }))
     expect(palette?.accent).toBe('#ff00aa')
     expect(palette?.accentGradient).toEqual(['#ff00aa', '#00aaff'])
   })

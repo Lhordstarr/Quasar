@@ -54,8 +54,8 @@ describe('trackGenerateEvent', () => {
       contentParts: [],
     } as Message
     const settings = {
-      modelId: 'chatboxai-4',
-      provider: 'chatboxai',
+      modelId: 'deepseek-v4-pro',
+      provider: 'deepseek',
     } as SessionSettings
 
     const result = handleGenerationError(error, message, settings, { operationType: 'send_message' })

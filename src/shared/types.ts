@@ -159,8 +159,6 @@ export interface SessionAttachmentRagMaintenanceResult {
   orphanDeletedIds: number[]
 }
 
-export type ChatboxAIModel = 'chatboxai-3.5' | 'chatboxai-4' | string
-
 export function copyMessage(source: Message): Message {
   return {
     ...source,

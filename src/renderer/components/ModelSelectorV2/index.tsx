@@ -450,13 +450,7 @@ export const ModelSelectorV2 = forwardRef<HTMLDivElement, ModelSelectorV2Props>(
                 >
                   <div aria-hidden className="mx-auto my-3 h-1 w-14 rounded-full bg-chatbox-tint-tertiary opacity-70" />
                   <Drawer.Title className="hidden">{t('Model details')}</Drawer.Title>
-                  {mobileDetail && (
-                    <DetailCard
-                      model={mobileDetail}
-                      onClose={() => setMobileDetail(null)}
-                      mobile
-                    />
-                  )}
+                  {mobileDetail && <DetailCard model={mobileDetail} onClose={() => setMobileDetail(null)} mobile />}
                   <div className="h-[--mobile-safe-area-inset-bottom] min-h-4" />
                 </Stack>
               </Drawer.Content>
@@ -508,10 +502,7 @@ export const ModelSelectorV2 = forwardRef<HTMLDivElement, ModelSelectorV2Props>(
               onMouseEnter={clearDesktopDetailCloseTimer}
               onMouseLeave={scheduleDesktopDetailClose}
             >
-              <DetailCard
-                model={desktopDetail.model}
-                pricingLink={desktopDetail.pricingLink}
-              />
+              <DetailCard model={desktopDetail.model} pricingLink={desktopDetail.pricingLink} />
             </div>
           )}
         </Combobox.Dropdown>

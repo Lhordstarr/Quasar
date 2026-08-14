@@ -260,7 +260,7 @@ export const DesktopModelSelector = forwardRef<HTMLDivElement, DesktopModelSelec
                       className="-ml-xs -mr-xs pr-sm"
                     />
                     <div className="mb-xs">
-                      {group.models.map((fm) => {
+                      {group.models?.map((fm) => {
                         if (!fm.provider || !fm.model) return null
                         return (
                           <ModelItem

@@ -26,8 +26,6 @@ const TEST_TIMEOUT = Number(process.env.CHATBOX_TEST_TIMEOUT) || 120000
 const shouldSkip = !LICENSE_KEY
 
 const DEFAULT_TEST_MODELS = [
-  { provider: 'chatbox-ai', modelId: 'chatboxai-3.5', name: 'ChatboxAI 3.5' },
-  { provider: 'chatbox-ai', modelId: 'chatboxai-4', name: 'ChatboxAI 4' },
   { provider: 'chatbox-ai', modelId: 'gpt-4o-mini', name: 'GPT-4o Mini (ChatboxAI)' },
   { provider: 'chatbox-ai', modelId: 'gpt-4o', name: 'GPT-4o (ChatboxAI)' },
   { provider: 'chatbox-ai', modelId: 'gpt-5-mini', name: 'GPT-5 Mini (ChatboxAI)' },

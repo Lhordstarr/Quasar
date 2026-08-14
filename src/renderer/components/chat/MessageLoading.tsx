@@ -45,7 +45,7 @@ function MessageStatus(props: { status: NonNullable<Message['status']>[number] }
         {status.mode === 'local' && remoteConfig.setting_chatboxai_first && (
           <Typography variant="body2" sx={{ opacity: 0.5 }} className="pb-1">
             <Trans
-              i18nKey="Due to local processing limitations, <Link>Chatbox AI Service</Link> is recommended for enhanced document processing capabilities and better results."
+              i18nKey=""
               components={{
                 Link: (
                   <LinkTargetBlank
@@ -77,7 +77,7 @@ function MessageStatus(props: { status: NonNullable<Message['status']>[number] }
         {status.mode === 'local' && remoteConfig.setting_chatboxai_first && (
           <Typography variant="body2" sx={{ opacity: 0.5 }} className="pb-1">
             <Trans
-              i18nKey="Due to local processing limitations, <Link>Chatbox AI Service</Link> is recommended to enhance webpage parsing capabilities, especially for dynamic pages."
+              i18nKey=""
               components={{
                 Link: (
                   <LinkTargetBlank

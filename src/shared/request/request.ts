@@ -129,15 +129,15 @@ export function createAfetch(platformInfo: PlatformInfo) {
             }
           }
           console.error('API Error Response:', {
-          status: res.status,
-          body: response?.substring(0, 500)
-        })
-        throw new ApiError(
-          `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
-          response || undefined,
-          res.status,
-          requestId
-        )
+            status: res.status,
+            body: response?.substring(0, 500),
+          })
+          throw new ApiError(
+            `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
+            response || undefined,
+            res.status,
+            requestId
+          )
         }
         return res
       } catch (e) {
@@ -333,15 +333,15 @@ export function createAuthenticatedAfetch(config: AuthenticatedAfetchConfig) {
             }
           }
           console.error('API Error Response:', {
-          status: res.status,
-          body: response?.substring(0, 500)
-        })
-        throw new ApiError(
-          `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
-          response || undefined,
-          res.status,
-          requestId
-        )
+            status: res.status,
+            body: response?.substring(0, 500),
+          })
+          throw new ApiError(
+            `Status Code ${res.status}, ${sanitizeResponseBody(res.status, response)}`,
+            response || undefined,
+            res.status,
+            requestId
+          )
         }
 
         return res
